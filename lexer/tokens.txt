@@ -1,6 +1,4 @@
 Token(VAR, var)
-Token(IDENTIFIER, x)
-Token(ASSIGN, :=)
-Token(REAL_LITERAL, 1.2)
-Token(SEMICOLON, ;)
+Token(IDENTIFIER, a2)
+Token(DOT, .)
 Token(EOF, )

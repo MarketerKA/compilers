@@ -77,9 +77,13 @@ public class Lexer
     {
         int start = _position;
         bool isReal = false;
-        while (_currentChar != '\0' && (char.IsDigit(_currentChar) || _currentChar == '.'))
+        while (_currentChar != '\0')
         {
-            if (_currentChar == '.')
+            if (char.IsDigit(_currentChar))
+            {
+                Advance();
+            }
+            else if (_currentChar == '.')
             {
                 Advance();
                 if (_currentChar == '.')
@@ -89,12 +93,14 @@ public class Lexer
                 }
                 isReal = true;
             }
-
-            if (!char.IsDigit(_currentChar))
+            else if (char.IsLetter(_currentChar))
             {
-                throw new Exception($"Unexpected character after '.': {_currentChar}");
+                throw new Exception($"Unexpected character after number: {_currentChar}");
             }
-            Advance();
+            else
+            {
+                break;
+            }
         }
         string value = _input.Substring(start, _position - start);
         return new Token(isReal ? TokenType.REAL_LITERAL : TokenType.INTEGER_LITERAL, value);
