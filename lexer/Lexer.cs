@@ -66,6 +66,9 @@ public class Lexer
             case "bool": return TokenType.BOOL;
             case "string": return TokenType.STRING;
             case "empty": return TokenType.EMPTY;
+            case "and": return TokenType.AND;
+            case "or": return TokenType.OR;
+            case "xor": return TokenType.XOR;
             default: return TokenType.IDENTIFIER;
         }
     }
@@ -91,7 +94,6 @@ public class Lexer
             {
                 throw new Exception($"Unexpected character after '.': {_currentChar}");
             }
-            isReal = true;
             Advance();
         }
         string value = _input.Substring(start, _position - start);
@@ -100,14 +102,14 @@ public class Lexer
 
     private Token ReadString()
     {
-        Advance(); // Skip the opening quote
+        Advance();
         int start = _position;
         while (_currentChar != '\0' && _currentChar != '"')
         {
             Advance();
         }
         string value = _input.Substring(start, _position - start);
-        Advance(); // Skip the closing quote
+        Advance();
         return new Token(TokenType.STRING_LITERAL, value);
     }
 
@@ -129,6 +131,11 @@ public class Lexer
                     SkipComment();
                     continue;
                 }
+
+                if (_currentChar == '=')
+                {
+                    return new Token(TokenType.NOT_EQUAL, "/=");
+                }
                 return new Token(TokenType.DIVIDE, "/");
             }
 
@@ -141,7 +148,6 @@ public class Lexer
             {
                 return ReadNumber();
             }
-
 
             if (_currentChar == '"')
             {
@@ -157,6 +163,17 @@ public class Lexer
                     return new Token(TokenType.ASSIGN, ":=");
                 }
                 throw new Exception($"Unexpected character: {_currentChar}");
+            }
+
+            if (_currentChar == '=')
+            {
+                Advance();
+                if (_currentChar == '>')
+                {
+                    Advance();
+                    return new Token(TokenType.ARROW, "=>");
+                }
+                return new Token(TokenType.EQUAL, "=");
             }
 
             if (_currentChar == '.')
@@ -175,7 +192,6 @@ public class Lexer
                 case '+': Advance(); return new Token(TokenType.PLUS, "+");
                 case '-': Advance(); return new Token(TokenType.MINUS, "-");
                 case '*': Advance(); return new Token(TokenType.MULTIPLY, "*");
-                case '=': Advance(); return new Token(TokenType.EQUAL, "=");
                 case '<':
                     Advance();
                     if (_currentChar == '=')
@@ -192,31 +208,6 @@ public class Lexer
                         return new Token(TokenType.GREATER_EQUAL, ">=");
                     }
                     return new Token(TokenType.GREATER, ">");
-                case '!':
-                    Advance();
-                    if (_currentChar == '=')
-                    {
-                        Advance();
-                        return new Token(TokenType.NOT_EQUAL, "!=");
-                    }
-                    return new Token(TokenType.NOT, "!");
-                case '&':
-                    Advance();
-                    if (_currentChar == '&')
-                    {
-                        Advance();
-                        return new Token(TokenType.AND, "&&");
-                    }
-                    break;
-                case '|':
-                    Advance();
-                    if (_currentChar == '|')
-                    {
-                        Advance();
-                        return new Token(TokenType.OR, "||");
-                    }
-                    break;
-                case '^': Advance(); return new Token(TokenType.XOR, "^");
                 case ',': Advance(); return new Token(TokenType.COMMA, ",");
                 case ';': Advance(); return new Token(TokenType.SEMICOLON, ";");
                 case '(': Advance(); return new Token(TokenType.LPAREN, "(");
