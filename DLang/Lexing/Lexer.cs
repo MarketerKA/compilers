@@ -1,4 +1,4 @@
-namespace DLang.Lexer
+namespace DLang.Lexing
 {
 
     internal class Lexer

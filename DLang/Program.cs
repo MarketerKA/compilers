@@ -1,4 +1,6 @@
-﻿namespace DLang
+﻿using DLang.Lexing;
+
+namespace DLang
 {
 
     public class Program
@@ -9,15 +11,15 @@
 
             string input = File.ReadAllText(arguments.InputFilePath);
 
-            Lexer.Lexer lexer = new(input);
-            Lexer.Token token;
+            Lexer lexer = new(input);
+            Token token;
             string tokensOutput = "";
 
             do
             {
                 token = lexer.GetNextToken();
                 tokensOutput += token.ToString() + Environment.NewLine;
-            } while (token.Type != Lexer.TokenType.EOF);
+            } while (token.Type != TokenType.EOF);
 
             Console.WriteLine(tokensOutput);
         }
