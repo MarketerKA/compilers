@@ -1,25 +1,26 @@
-﻿using DLang.Lexer;
-using DLang;
-
-public class Program
+﻿namespace DLang
 {
-    public static void Main(string[] args)
+
+    public class Program
     {
-        Args arguments = new(args);
-
-
-        string input = File.ReadAllText(arguments.InputFilePath);
-
-        Lexer lexer = new Lexer(input);
-        Token token;
-        string tokensOutput = "";
-
-        do
+        public static void Main(string[] args)
         {
-            token = lexer.GetNextToken();
-            tokensOutput += token.ToString() + Environment.NewLine;
-        } while (token.Type != TokenType.EOF);
+            Args arguments = new(args);
 
-        Console.WriteLine(tokensOutput);
+            string input = File.ReadAllText(arguments.InputFilePath);
+
+            Lexer.Lexer lexer = new(input);
+            Lexer.Token token;
+            string tokensOutput = "";
+
+            do
+            {
+                token = lexer.GetNextToken();
+                tokensOutput += token.ToString() + Environment.NewLine;
+            } while (token.Type != Lexer.TokenType.EOF);
+
+            Console.WriteLine(tokensOutput);
+        }
     }
+
 }
