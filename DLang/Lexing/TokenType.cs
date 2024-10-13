@@ -17,7 +17,7 @@ namespace DLang.Lexing
         IDENTIFIER, INTEGER_LITERAL, REAL_LITERAL, BOOLEAN_LITERAL, STRING_LITERAL,
 
         // Types
-        INT, REAL, BOOL, STRING, EMPTY, VECTOR, TUPLE, FUNC,
+        INT, REAL, BOOL, STRING, EMPTY, FUNC,
 
         // Special
         EOF, RANGE
