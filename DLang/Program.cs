@@ -1,16 +1,14 @@
-﻿using System;
-using System.IO;
-using DLang.Lexer;
+﻿using DLang.Lexer;
+using DLang;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        string inputFilePath = "test_code.d";
+        Args arguments = new(args);
 
-        string outputFilePath = "tokens.txt";
 
-        string input = File.ReadAllText(inputFilePath);
+        string input = File.ReadAllText(arguments.InputFilePath);
 
         Lexer lexer = new Lexer(input);
         Token token;
@@ -22,8 +20,6 @@ public class Program
             tokensOutput += token.ToString() + Environment.NewLine;
         } while (token.Type != TokenType.EOF);
 
-        File.WriteAllText(outputFilePath, tokensOutput);
-
-        Console.WriteLine("Tokens have been written to " + outputFilePath);
+        Console.WriteLine(tokensOutput);
     }
 }
