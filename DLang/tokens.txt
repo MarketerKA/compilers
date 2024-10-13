@@ -1,4 +1,0 @@
-Token(VAR, var)
-Token(IDENTIFIER, a2)
-Token(DOT, .)
-Token(EOF, )
