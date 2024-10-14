@@ -54,7 +54,7 @@ namespace DLang.Lexing
             switch (value)
             {
                 case "var": return Tokens.VAR;
-                case "func": return Tokens.FUNCTION;
+                case "func": return Tokens.FUNC;
                 case "if": return Tokens.IF;
                 case "then": return Tokens.THEN;
                 case "else": return Tokens.ELSE;
