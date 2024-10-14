@@ -4,6 +4,7 @@
     internal class Reference
     {
         public readonly string? Identifier;
+        public readonly Int128? TupleIndex;
         public readonly Reference? Subreference;
         public readonly Expression? Expression;
         public readonly ExpressionList? Expressions;
@@ -25,9 +26,15 @@
             Expressions = expressionList;
         }
 
-        public Reference(Reference reference, string? identifier)
+        public Reference(Reference reference, string identifier)
         {
             Identifier = identifier;
+            Subreference = reference;
+        }
+
+        public Reference(Reference reference, Int128 tupleIndex)
+        {
+            TupleIndex = tupleIndex;
             Subreference = reference;
         }
     }

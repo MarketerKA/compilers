@@ -228,6 +228,7 @@ Reference
     | Reference LBRACKET Expression RBRACKET { $$ = new Reference($1, $3); }
     | Reference LPAREN ExpressionList RPAREN { $$ = new Reference($1, $3); }
     | Reference DOT IDENTIFIER { $$ = new Reference($1, $3.Token.Value); }
+    | Reference DOT INTEGER_LITERAL { $$ = new Reference($1, Int128.Parse($3.Token.Value)); }
     ;
 
 Primary
