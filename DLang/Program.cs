@@ -15,7 +15,7 @@ namespace DLang
             string input = File.ReadAllText(arguments.InputFilePath);
 
             Lexer lexer = new(input);
-            Scanner scanner = new(lexer);
+            Scanner scanner = new(lexer, true);
             Parser parser = new(scanner);
             if (!parser.Parse())
             {
