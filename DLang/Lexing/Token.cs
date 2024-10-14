@@ -1,12 +1,14 @@
+using DLang.Parsing;
+
 namespace DLang.Lexing
 {
 
     internal class Token
     {
-        public TokenType Type { get; }
+        public Tokens Type { get; }
         public string Value { get; }
 
-        public Token(TokenType type, string value)
+        public Token(Tokens type, string value)
         {
             Type = type;
             Value = value;

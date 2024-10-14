@@ -1,3 +1,5 @@
+using DLang.Parsing;
+
 namespace DLang.Lexing
 {
 
@@ -47,32 +49,32 @@ namespace DLang.Lexing
             return new Token(GetKeywordType(value), value);
         }
 
-        private TokenType GetKeywordType(string value)
+        private Tokens GetKeywordType(string value)
         {
             switch (value)
             {
-                case "var": return TokenType.VAR;
-                case "func": return TokenType.FUNCTION;
-                case "if": return TokenType.IF;
-                case "then": return TokenType.THEN;
-                case "else": return TokenType.ELSE;
-                case "end": return TokenType.END;
-                case "while": return TokenType.WHILE;
-                case "for": return TokenType.FOR;
-                case "in": return TokenType.IN;
-                case "loop": return TokenType.LOOP;
-                case "return": return TokenType.RETURN;
-                case "print": return TokenType.PRINT;
-                case "is": return TokenType.IS;
-                case "int": return TokenType.INT;
-                case "real": return TokenType.REAL;
-                case "bool": return TokenType.BOOL;
-                case "string": return TokenType.STRING;
-                case "empty": return TokenType.EMPTY;
-                case "and": return TokenType.AND;
-                case "or": return TokenType.OR;
-                case "xor": return TokenType.XOR;
-                default: return TokenType.IDENTIFIER;
+                case "var": return Tokens.VAR;
+                case "func": return Tokens.FUNCTION;
+                case "if": return Tokens.IF;
+                case "then": return Tokens.THEN;
+                case "else": return Tokens.ELSE;
+                case "end": return Tokens.END;
+                case "while": return Tokens.WHILE;
+                case "for": return Tokens.FOR;
+                case "in": return Tokens.IN;
+                case "loop": return Tokens.LOOP;
+                case "return": return Tokens.RETURN;
+                case "print": return Tokens.PRINT;
+                case "is": return Tokens.IS;
+                case "int": return Tokens.INT;
+                case "real": return Tokens.REAL;
+                case "bool": return Tokens.BOOL;
+                case "string": return Tokens.STRING;
+                case "empty": return Tokens.EMPTY;
+                case "and": return Tokens.AND;
+                case "or": return Tokens.OR;
+                case "xor": return Tokens.XOR;
+                default: return Tokens.IDENTIFIER;
             }
         }
 
@@ -106,7 +108,7 @@ namespace DLang.Lexing
                 }
             }
             string value = _input.Substring(start, _position - start);
-            return new Token(isReal ? TokenType.REAL_LITERAL : TokenType.INTEGER_LITERAL, value);
+            return new Token(isReal ? Tokens.REAL_LITERAL : Tokens.INTEGER_LITERAL, value);
         }
 
         private Token ReadString()
@@ -119,7 +121,7 @@ namespace DLang.Lexing
             }
             string value = _input.Substring(start, _position - start);
             Advance();
-            return new Token(TokenType.STRING_LITERAL, value);
+            return new Token(Tokens.STRING_LITERAL, value);
         }
 
         public Token GetNextToken()
@@ -143,9 +145,9 @@ namespace DLang.Lexing
 
                     if (_currentChar == '=')
                     {
-                        return new Token(TokenType.NOT_EQUAL, "/=");
+                        return new Token(Tokens.NOT_EQUAL, "/=");
                     }
-                    return new Token(TokenType.DIVIDE, "/");
+                    return new Token(Tokens.DIVIDE, "/");
                 }
 
                 if (char.IsLetter(_currentChar) || _currentChar == '_')
@@ -169,7 +171,7 @@ namespace DLang.Lexing
                     if (_currentChar == '=')
                     {
                         Advance();
-                        return new Token(TokenType.ASSIGN, ":=");
+                        return new Token(Tokens.ASSIGN, ":=");
                     }
                     throw new Exception($"Unexpected character: {_currentChar}");
                 }
@@ -180,9 +182,9 @@ namespace DLang.Lexing
                     if (_currentChar == '>')
                     {
                         Advance();
-                        return new Token(TokenType.ARROW, "=>");
+                        return new Token(Tokens.ARROW, "=>");
                     }
-                    return new Token(TokenType.EQUAL, "=");
+                    return new Token(Tokens.EQUAL, "=");
                 }
 
                 if (_currentChar == '.')
@@ -191,46 +193,46 @@ namespace DLang.Lexing
                     if (_currentChar == '.')
                     {
                         Advance();
-                        return new Token(TokenType.RANGE, "..");
+                        return new Token(Tokens.RANGE, "..");
                     }
-                    return new Token(TokenType.DOT, ".");
+                    return new Token(Tokens.DOT, ".");
                 }
 
                 switch (_currentChar)
                 {
-                    case '+': Advance(); return new Token(TokenType.PLUS, "+");
-                    case '-': Advance(); return new Token(TokenType.MINUS, "-");
-                    case '*': Advance(); return new Token(TokenType.MULTIPLY, "*");
+                    case '+': Advance(); return new Token(Tokens.PLUS, "+");
+                    case '-': Advance(); return new Token(Tokens.MINUS, "-");
+                    case '*': Advance(); return new Token(Tokens.MULTIPLY, "*");
                     case '<':
                         Advance();
                         if (_currentChar == '=')
                         {
                             Advance();
-                            return new Token(TokenType.LESS_EQUAL, "<=");
+                            return new Token(Tokens.LESS_EQUAL, "<=");
                         }
-                        return new Token(TokenType.LESS, "<");
+                        return new Token(Tokens.LESS, "<");
                     case '>':
                         Advance();
                         if (_currentChar == '=')
                         {
                             Advance();
-                            return new Token(TokenType.GREATER_EQUAL, ">=");
+                            return new Token(Tokens.GREATER_EQUAL, ">=");
                         }
-                        return new Token(TokenType.GREATER, ">");
-                    case ',': Advance(); return new Token(TokenType.COMMA, ",");
-                    case ';': Advance(); return new Token(TokenType.SEMICOLON, ";");
-                    case '(': Advance(); return new Token(TokenType.LPAREN, "(");
-                    case ')': Advance(); return new Token(TokenType.RPAREN, ")");
-                    case '[': Advance(); return new Token(TokenType.LBRACKET, "[");
-                    case ']': Advance(); return new Token(TokenType.RBRACKET, "]");
-                    case '{': Advance(); return new Token(TokenType.LBRACE, "{");
-                    case '}': Advance(); return new Token(TokenType.RBRACE, "}");
+                        return new Token(Tokens.GREATER, ">");
+                    case ',': Advance(); return new Token(Tokens.COMMA, ",");
+                    case ';': Advance(); return new Token(Tokens.SEMICOLON, ";");
+                    case '(': Advance(); return new Token(Tokens.LPAREN, "(");
+                    case ')': Advance(); return new Token(Tokens.RPAREN, ")");
+                    case '[': Advance(); return new Token(Tokens.LBRACKET, "[");
+                    case ']': Advance(); return new Token(Tokens.RBRACKET, "]");
+                    case '{': Advance(); return new Token(Tokens.LBRACE, "{");
+                    case '}': Advance(); return new Token(Tokens.RBRACE, "}");
                 }
 
                 throw new Exception($"Unexpected character: {_currentChar}");
             }
 
-            return new Token(TokenType.EOF, string.Empty);
+            return new Token(Tokens.EOF, string.Empty);
         }
     }
 }
