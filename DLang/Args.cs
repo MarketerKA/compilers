@@ -10,18 +10,16 @@
 
     internal class Args
     {
-        public readonly string ProgramName;
         public readonly string InputFilePath;
 
         public Args(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length < 1)
             {
                 throw new ArgumentException("Not enough arguments");
             }
 
-            ProgramName = args[0];
-            InputFilePath = args[1];
+            InputFilePath = args[0];
         }
     }
 
