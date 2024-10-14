@@ -17,6 +17,18 @@
     <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net20|AnyCPU'">
+    <DefineConstants>$(DefineConstants);EXPORT_GPPG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
+    <DefineConstants>$(DefineConstants);EXPORT_GPPG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net20|AnyCPU'">
+    <DefineConstants>$(DefineConstants);EXPORT_GPPG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
+    <DefineConstants>$(DefineConstants);EXPORT_GPPG</DefineConstants>
+  </PropertyGroup>
   
   <!-- Executes /t:Publish for all target frameworks before packing -->
   <Target Name="NugetCrossTarget" AfterTargets="Build" Condition="'$(TargetFrameworks)' != ''">
