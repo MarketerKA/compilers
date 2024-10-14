@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Parsing\" />
+    <ProjectReference Include="..\GPPG\GPPG.csproj" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="$(SolutionDir)GPPG\bin\$(Configuration)\net20\Gppg.exe $(SolutionDir)DLang\Parsing\Parser.y /out:$(SolutionDir)DLang\Parsing\Parser.cs" />
+  </Target>
 
 </Project>
