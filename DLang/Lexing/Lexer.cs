@@ -48,6 +48,7 @@ namespace DLang.Lexing
             string value = _input.Substring(start, _position - start);
             return new Token(GetKeywordType(value), value);
         }
+        
 
         private Tokens GetKeywordType(string value)
         {
@@ -84,31 +85,40 @@ namespace DLang.Lexing
         {
             int start = _position;
             bool isReal = false;
-            while (_currentChar != '\0')
-            {
-                if (char.IsDigit(_currentChar))
-                {
+            if (_input[_position - 1] == '.'){
+                while(_currentChar != '\0' && _currentChar != '.'){
                     Advance();
-                }
-                else if (_currentChar == '.')
-                {
-                    Advance();
-                    if (_currentChar == '.')
-                    {
-                        _position--;
-                        break;
-                    }
-                    isReal = true;
-                }
-                else if (char.IsLetter(_currentChar))
-                {
-                    throw new Exception($"Unexpected character after number: {_currentChar}");
-                }
-                else
-                {
                     break;
                 }
             }
+            else {
+                while (_currentChar != '\0')
+                {
+                    if (char.IsDigit(_currentChar))
+                    {
+                        Advance();
+                    }
+                    else if (_currentChar == '.')
+                    {
+                        Advance();
+                        if (_currentChar == '.')
+                        {
+                            _position--;
+                            break;
+                        }
+                        isReal = true;
+                    }
+                    else if (char.IsLetter(_currentChar))
+                    {
+                        throw new Exception($"Unexpected character after number: {_currentChar}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            
             string value = _input.Substring(start, _position - start);
             return new Token(isReal ? Tokens.REAL_LITERAL : Tokens.INTEGER_LITERAL, value);
         }

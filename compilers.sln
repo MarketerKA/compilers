@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLang", "dlang\DLang.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPPG", "gppg\GPPG.csproj", "{D7A76E20-E9DA-48BB-BEE5-0F94FA8265DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLang.Tests", "DLang.Tests\DLang.Tests.csproj", "{660535A0-7483-461B-8F25-2338BD5B4DED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D7A76E20-E9DA-48BB-BEE5-0F94FA8265DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7A76E20-E9DA-48BB-BEE5-0F94FA8265DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7A76E20-E9DA-48BB-BEE5-0F94FA8265DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{660535A0-7483-461B-8F25-2338BD5B4DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{660535A0-7483-461B-8F25-2338BD5B4DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{660535A0-7483-461B-8F25-2338BD5B4DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{660535A0-7483-461B-8F25-2338BD5B4DED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
