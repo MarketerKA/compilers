@@ -287,7 +287,8 @@ FunctionBody
     ;
 
 Tuple
-    : RBRACE TupleElements LBRACE { $$ = new AST.Tuple($2); }
+    : LBRACE TupleElements RBRACE { $$ = new AST.Tuple($2); }
+    | LBRACE RBRACE { $$ = new AST.Tuple(new TupleElements()); }
     ;
 
 TupleElements
