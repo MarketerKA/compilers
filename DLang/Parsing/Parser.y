@@ -303,6 +303,7 @@ TupleElement
 
 Array
     : LBRACKET ArrayElements RBRACKET { $$ = new AST.Array($2); }
+    | LBRACKET RBRACKET { $$ = new AST.Array(new ArrayElements()); }
     ;
 
 ArrayElements
