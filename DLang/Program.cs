@@ -1,4 +1,5 @@
 ﻿using DLang.Lexing;
+using DLang.Parsing;
 
 namespace DLang
 {
@@ -19,7 +20,7 @@ namespace DLang
             {
                 token = lexer.GetNextToken();
                 tokensOutput += token.ToString() + Environment.NewLine;
-            } while (token.Type != TokenType.EOF);
+            } while (token.Type != Tokens.EOF);
 
             Console.WriteLine(tokensOutput);
         }
