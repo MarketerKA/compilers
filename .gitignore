@@ -26,3 +26,6 @@ obj/
 # Ignore any other OS-specific files (optional)
 .DS_Store
 Thumbs.db
+
+DLang/Parsing/Parser.cs
+Parser.lst
