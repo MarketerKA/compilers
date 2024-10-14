@@ -311,3 +311,5 @@ ArrayElements
 %%
 
 public Parser(Scanner scanner) : base(scanner) { }
+
+public ProgramTree GetProgramTree() { return CurrentSemanticValue.ProgramTree; }
