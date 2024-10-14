@@ -263,7 +263,7 @@ TypeIndicator
 
 Literal
     : INTEGER_LITERAL { $$ = new Literal(Int128.Parse($1.Token.Value)); }
-    | REAL_LITERAL { $$ = new Literal(double.Parse($1.Token.Value)); }
+    | REAL_LITERAL { $$ = new Literal(double.Parse($1.Token.Value, System.Globalization.CultureInfo.InvariantCulture)); }
     | BOOLEAN_LITERAL { $$ = new Literal(bool.Parse($1.Token.Value)); }
     | STRING_LITERAL { $$ = new Literal($1.Token.Value); }
     | Tuple { $$ = new Literal($1); }
