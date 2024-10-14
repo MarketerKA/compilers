@@ -1,5 +1,7 @@
-﻿using DLang.Lexing;
+﻿using System.Text.Json;
+using DLang.Lexing;
 using DLang.Parsing;
+using DLang.Parsing.AST;
 
 namespace DLang
 {
@@ -13,16 +15,25 @@ namespace DLang
             string input = File.ReadAllText(arguments.InputFilePath);
 
             Lexer lexer = new(input);
-            Token token;
-            string tokensOutput = "";
-
-            do
+            Scanner scanner = new(lexer);
+            Parser parser = new(scanner);
+            if (!parser.Parse())
             {
-                token = lexer.GetNextToken();
-                tokensOutput += token.ToString() + Environment.NewLine;
-            } while (token.Type != Tokens.EOF);
+                Console.WriteLine("Parsing failure");
+                System.Environment.Exit(1);
+            }
 
-            Console.WriteLine(tokensOutput);
+            ProgramTree programTree = parser.GetProgramTree();
+
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                IncludeFields = true,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
+
+            string json = JsonSerializer.Serialize(programTree, options);
+            Console.WriteLine(json);
         }
     }
 
