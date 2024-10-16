@@ -12,10 +12,22 @@ namespace DLang
         {
             Args arguments = new(args);
 
-            string input = File.ReadAllText(arguments.InputFilePath);
+            string input = "";
+
+            try
+            { 
+                input = File.ReadAllText(arguments.InputFilePath); 
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Failed to read file ${arguments.InputFilePath}: {e.Message}");
+                System.Environment.Exit(1);
+            }
+
+            string filename = Path.GetFileName(arguments.InputFilePath);
 
             Lexer lexer = new(input);
-            Scanner scanner = new(lexer, true);
+            Scanner scanner = new(lexer, filename, true);
             Parser parser = new(scanner);
 
             try
