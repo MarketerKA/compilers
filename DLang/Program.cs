@@ -35,8 +35,12 @@ namespace DLang
                 parser.Parse();
             }
             catch (ParsingError e) {
-                Console.Error.WriteLine("Syntax error:");
                 Console.Error.WriteLine(e.Message);
+                System.Environment.Exit(1);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Unknown error: {e.Message}");
                 System.Environment.Exit(1);
             }
 
