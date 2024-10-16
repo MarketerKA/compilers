@@ -17,9 +17,14 @@ namespace DLang
             Lexer lexer = new(input);
             Scanner scanner = new(lexer, true);
             Parser parser = new(scanner);
-            if (!parser.Parse())
+
+            try
             {
-                Console.WriteLine("Parsing failure");
+                parser.Parse();
+            }
+            catch (ParsingError e) {
+                Console.Error.WriteLine("Syntax error:");
+                Console.Error.WriteLine(e.Message);
                 System.Environment.Exit(1);
             }
 
