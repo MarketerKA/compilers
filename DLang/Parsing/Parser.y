@@ -221,6 +221,7 @@ Unary
     : Reference { $$ = new Unary($1); }
     | Reference IS TypeIndicator { $$ = new Unary($1, $3); }
     | Primary  { $$ = new Unary($1); }
+    | PrimaryOperator Primary { $$ = new Unary($1, $2); }
     ;
 
 Reference
@@ -236,7 +237,6 @@ Primary
     | Read { $$ = new Primary($1); }
     | FunctionLiteral { $$ = new Primary($1); }
     | LPAREN Expression RPAREN { $$ = new Primary($2); }
-    | PrimaryOperator Primary { $$ = new Primary($1, $2); }
     ;
 
 PrimaryOperator

@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 namespace DLang.Parsing.AST
 {
     internal class Primary
@@ -8,8 +6,6 @@ namespace DLang.Parsing.AST
         public readonly ReadType? Read;
         public readonly FunctionLiteral? FunctionLiteral;
         public readonly Expression? Expression;
-        public readonly PrimaryOperator? Operator;
-        public readonly Primary? Subprimary;
 
         public Primary(Literal literal)
         {
@@ -30,11 +26,6 @@ namespace DLang.Parsing.AST
         {
             Expression = expression;
         }
-
-        public Primary(PrimaryOperator @operator, Primary primary)
-        {
-            Operator = @operator;
-            Subprimary = primary;
-        }
     }
+
 }

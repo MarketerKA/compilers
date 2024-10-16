@@ -6,6 +6,7 @@
         public readonly Reference? Reference;
         public readonly TypeIndicator? TypeIndicator;
         public readonly Primary? Primary;
+        public readonly PrimaryOperator? PrimaryOperator;
 
         public Unary(Reference reference)
         {
@@ -20,6 +21,12 @@
 
         public Unary(Primary primary)
         {
+            Primary = primary;
+        }
+
+        public Unary(PrimaryOperator primaryOperator, Primary primary)
+        {
+            PrimaryOperator = primaryOperator;
             Primary = primary;
         }
     }
