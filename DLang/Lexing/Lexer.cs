@@ -8,17 +8,28 @@ namespace DLang.Lexing
         private readonly string _input;
         private int _position;
         private char _currentChar;
+        private int _line;
+        private int _col;
 
         public Lexer(string input)
         {
             _input = input;
             _position = 0;
             _currentChar = _input.Length > 0 ? _input[0] : '\0';
+            _line = 1;
+            _col = 1;
         }
 
         private void Advance()
         {
+            if (_currentChar == '\n')
+            {
+                _line++;
+                _col = 0;
+            }
+
             _position++;
+            _col++;
             _currentChar = _position < _input.Length ? _input[_position] : '\0';
         }
 
@@ -246,5 +257,9 @@ namespace DLang.Lexing
 
             return new Token(Tokens.EOF, string.Empty);
         }
+
+        public int GetCurrentLine() { return _line; }
+
+        public int GetCurrentCol() { return _col; }
     }
 }
