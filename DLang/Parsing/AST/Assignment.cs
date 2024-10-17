@@ -2,12 +2,12 @@
 {
     internal class Assignment
     {
-        public readonly string Identifier;
+        public readonly Reference Reference;
         public readonly Expression Expression;
 
-        public Assignment(string identifier, Expression expression)
+        public Assignment(Reference reference, Expression expression)
         {
-            Identifier = identifier;
+            Reference = reference;
             Expression = expression;
         }
     }

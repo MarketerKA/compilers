@@ -133,8 +133,8 @@ Definition
     ;
 
 Assignment
-    : IDENTIFIER ASSIGN Expression SEMICOLON
-      { $$ = new Assignment($1.Token.Value, $3); }
+    : Reference ASSIGN Expression SEMICOLON
+      { $$ = new Assignment($1, $3); }
     ;
 
 Print
