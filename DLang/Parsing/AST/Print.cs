@@ -1,11 +1,16 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Print
+    internal class Print : Locationed
     {
         public readonly ExpressionList Expressions;
 
-        public Print(ExpressionList expressions) { Expressions = expressions; }
+        public Print(LexLocation location, ExpressionList expressions) : base(location) 
+        { 
+            Expressions = expressions; 
+        }
     }
 
 }

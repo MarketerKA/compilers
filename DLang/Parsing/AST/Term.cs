@@ -1,13 +1,15 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Term
+    internal class Term : Locationed
     {
         public readonly Unary Left;
         public readonly TermOperator? Operator;
         public readonly Unary? Right;
 
-        public Term(Unary left, TermOperator? @operator, Unary? right)
+        public Term(LexLocation location, Unary left, TermOperator? @operator, Unary? right) : base(location)
         {
             Left = left;
             Operator = @operator;

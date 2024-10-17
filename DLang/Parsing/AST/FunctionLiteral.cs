@@ -1,12 +1,14 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class FunctionLiteral
+    internal class FunctionLiteral : Locationed
     {
         public readonly IdentifierList? Identifiers;
         public readonly FunctionBody Body;
 
-        public FunctionLiteral(IdentifierList? identifiers, FunctionBody body)
+        public FunctionLiteral(LexLocation location, IdentifierList? identifiers, FunctionBody body) : base(location)
         {
             Identifiers = identifiers;
             Body = body;

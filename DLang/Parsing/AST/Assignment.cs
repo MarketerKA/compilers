@@ -1,11 +1,13 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
-    internal class Assignment
+    internal class Assignment : Locationed
     {
         public readonly Reference Reference;
         public readonly Expression Expression;
 
-        public Assignment(Reference reference, Expression expression)
+        public Assignment(LexLocation location, Reference reference, Expression expression) : base(location)
         {
             Reference = reference;
             Expression = expression;

@@ -1,4 +1,6 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
     internal enum ReferenceType
@@ -10,7 +12,7 @@
         Member
     }
 
-    internal class Reference
+    internal class Reference : Locationed
     {
         public readonly ReferenceType Type;
         public readonly string? Identifier;
@@ -19,34 +21,34 @@
         public readonly Expression? Expression;
         public readonly ExpressionList? Expressions;
 
-        public Reference(string? identifier)
+        public Reference(LexLocation location, string? identifier) : base(location)
         {
             Identifier = identifier;
             Type = ReferenceType.Identifier;
         }
 
-        public Reference(Reference reference, Expression expression)
+        public Reference(LexLocation location, Reference reference, Expression expression) : base(location)
         {
             Subreference = reference;
             Expression = expression;
             Type = ReferenceType.ArrayIndex;
         }
 
-        public Reference(Reference reference, ExpressionList expressionList)
+        public Reference(LexLocation location, Reference reference, ExpressionList expressionList) : base(location)
         {
             Subreference = reference;
             Expressions = expressionList;
             Type = ReferenceType.FunctionCall;
         }
 
-        public Reference(Reference reference, string identifier)
+        public Reference(LexLocation location, Reference reference, string identifier) : base(location)
         {
             Identifier = identifier;
             Subreference = reference;
             Type = ReferenceType.Member;
         }
 
-        public Reference(Reference reference, Int128 tupleIndex)
+        public Reference(LexLocation location, Reference reference, Int128 tupleIndex) : base(location)
         {
             TupleIndex = tupleIndex;
             Subreference = reference;

@@ -1,4 +1,6 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
     internal enum UnaryType
@@ -8,7 +10,7 @@
         Primary
     }
 
-    internal class Unary
+    internal class Unary : Locationed
     {
         public readonly UnaryType Type;
         public readonly Reference? Reference;
@@ -16,26 +18,26 @@
         public readonly Primary? Primary;
         public readonly PrimaryOperator? PrimaryOperator;
 
-        public Unary(Reference reference)
+        public Unary(LexLocation location, Reference reference) : base(location)
         {
             Reference = reference;
             Type = UnaryType.Reference;
         }
 
-        public Unary(Reference reference, TypeIndicator typeIndicator)
+        public Unary(LexLocation location, Reference reference, TypeIndicator typeIndicator) : base(location)
         {
             Reference = reference;
             TypeIndicator = typeIndicator;
             Type = UnaryType.Is;
         }
 
-        public Unary(Primary primary)
+        public Unary(LexLocation location, Primary primary) : base(location)
         {
             Primary = primary;
             Type = UnaryType.Primary;
         }
 
-        public Unary(PrimaryOperator primaryOperator, Primary primary)
+        public Unary(LexLocation location, PrimaryOperator primaryOperator, Primary primary) : base(location)
         {
             PrimaryOperator = primaryOperator;
             Primary = primary;

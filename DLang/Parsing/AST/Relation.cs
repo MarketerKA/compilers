@@ -1,13 +1,15 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Relation
+    internal class Relation : Locationed
     {
         public readonly Factor Left;
         public readonly RelationOperator? Operator;
         public readonly Factor? Right;
 
-        public Relation(Factor left, RelationOperator? @operator, Factor? right)
+        public Relation(LexLocation location, Factor left, RelationOperator? @operator, Factor? right) : base(location)
         {
             Left = left;
             Operator = @operator;

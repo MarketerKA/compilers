@@ -1,11 +1,13 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Array
+    internal class Array : Locationed
     {
         public readonly ArrayElements Elements;
 
-        public Array(ArrayElements elements)
+        public Array(LexLocation location, ArrayElements elements) : base(location)
         {
             Elements = elements;
         }

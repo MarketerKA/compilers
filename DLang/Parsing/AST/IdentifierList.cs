@@ -1,13 +1,21 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class IdentifierList
+    internal class IdentifierList : Locationed
     {
         public readonly List<string> Identifiers;
 
-        public IdentifierList() { Identifiers = []; }
+        public IdentifierList(LexLocation location) : base(location) 
+        { 
+            Identifiers = []; 
+        }
 
-        public IdentifierList(string identifier) { Identifiers = [identifier]; }
+        public IdentifierList(LexLocation location, string identifier) : base(location) 
+        { 
+            Identifiers = [identifier]; 
+        }
 
         public void Add(string identifier) { Identifiers.Add(identifier); }
     }

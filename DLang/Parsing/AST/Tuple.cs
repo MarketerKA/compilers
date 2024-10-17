@@ -1,11 +1,13 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Tuple
+    internal class Tuple : Locationed
     {
         public readonly TupleElements Elements;
 
-        public Tuple(TupleElements elements)
+        public Tuple(LexLocation location, TupleElements elements) : base(location)
         {
             Elements = elements;
         }
