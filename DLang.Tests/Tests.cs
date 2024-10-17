@@ -15,7 +15,7 @@ public class Tests
 
             // Create the necessary components: Lexer, Scanner, Parser
             Lexer lexer = new Lexer(input);
-            Scanner scanner = new Scanner(lexer, true);
+            Scanner scanner = new Scanner(lexer, "file", true);
             Parser parser = new Parser(scanner);
 
             // Attempt to parse
@@ -31,7 +31,7 @@ public class Tests
             string input = "var tup := {a := 1 b := 2};";
 
             Lexer lexer = new Lexer(input);
-            Scanner scanner = new Scanner(lexer, true);
+            Scanner scanner = new Scanner(lexer, "file", true);
             Parser parser = new Parser(scanner);
 
             bool result = parser.Parse();
