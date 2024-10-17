@@ -100,81 +100,81 @@
 
 %%
 ProgramTree
-    : StatementList { $$ = new ProgramTree($1); }
+    : StatementList { $$ = new ProgramTree(@$, $1); }
     ;
 
 StatementList
-    : Statement { $$ = new StatementList($1); }
-    | StatementList Statement { $1.Add($2); $$ = $1; }
+    : Statement { $$ = new StatementList(@$, $1); }
+    | StatementList Statement { $1.Add($2); $$ = $1; $$.Location = @$; }
     ;
 
 Statement
-    : Declaration { $$ = new Statement($1); }
-    | Assignment { $$ = new Statement($1); }
-    | Print { $$ = new Statement($1); }
-    | If { $$ = new Statement($1); }
-    | Loop { $$ = new Statement($1); }
-    | Return { $$ = new Statement($1); }
+    : Declaration { $$ = new Statement(@$, $1); }
+    | Assignment { $$ = new Statement(@$, $1); }
+    | Print { $$ = new Statement(@$, $1); }
+    | If { $$ = new Statement(@$, $1); }
+    | Loop { $$ = new Statement(@$, $1); }
+    | Return { $$ = new Statement(@$, $1); }
     ;
 
 Declaration
     : VAR DefinitionList SEMICOLON
-      { $$ = new Declaration($2); }
+      { $$ = new Declaration(@$, $2); }
     ;
 
 DefinitionList
-    : Definition { $$ = new DefinitionList($1); }
-    | DefinitionList COMMA Definition { $1.Add($3); $$ = $1; }
+    : Definition { $$ = new DefinitionList(@$, $1); }
+    | DefinitionList COMMA Definition { $1.Add($3); $$ = $1; $$.Location = @$; }
     ;
 
 Definition
-    : IDENTIFIER { $$ = new Definition($1.Token.Value, null); }
-    | IDENTIFIER ASSIGN Expression { $$ = new Definition($1.Token.Value, $3); }
+    : IDENTIFIER { $$ = new Definition(@$, $1.Token.Value, null); }
+    | IDENTIFIER ASSIGN Expression { $$ = new Definition(@$, $1.Token.Value, $3); }
     ;
 
 Assignment
     : Reference ASSIGN Expression SEMICOLON
-      { $$ = new Assignment($1, $3); }
+      { $$ = new Assignment(@$, $1, $3); }
     ;
 
 Print
     : PRINT ExpressionList SEMICOLON
-      { $$ = new Print($2); }
+      { $$ = new Print(@$, $2); }
     ;
 
 If
     : IF Expression THEN StatementList IfTail
-      { $$ = new If($2, $4, $5); }
+      { $$ = new If(@$, $2, $4, $5); }
     ;
 
 IfTail
     : END { $$ = null; }
-    | ELSE StatementList END { $$ = $2; }
+    | ELSE StatementList END { $$ = $2; $$.Location = @$; }
     ;
 
 Loop
-    : WHILE Expression LOOP StatementList END { $$ = new Loop($2, $4); }
-    | FOR Range LOOP StatementList END { $$ = new Loop(null, $2, $4); }
-    | FOR IDENTIFIER IN Range LOOP StatementList END { $$ = new Loop($2.Token.Value, $4, $6); }
+    : WHILE Expression LOOP StatementList END { $$ = new Loop(@$, $2, $4); }
+    | FOR Range LOOP StatementList END { $$ = new Loop(@$, null, $2, $4); }
+    | FOR IDENTIFIER IN Range LOOP StatementList END { $$ = new Loop(@$, $2.Token.Value, $4, $6); }
     ;
 
 Range
-    : Expression RANGE Expression { $$ = new AST.Range($1, $3); }
+    : Expression RANGE Expression { $$ = new AST.Range(@$, $1, $3); }
     ;
 
 Return
-    : RETURN SEMICOLON { $$ = new Return(null); }
-    | RETURN Expression SEMICOLON { $$ = new Return($2); }
+    : RETURN SEMICOLON { $$ = new Return(@$, null); }
+    | RETURN Expression SEMICOLON { $$ = new Return(@$, $2); }
     ;
 
 ExpressionList
-    : Expression { $$ = new ExpressionList($1); }
-    | ExpressionList COMMA Expression { $1.Add($3); $$ = $1; }
+    : Expression { $$ = new ExpressionList(@$, $1); }
+    | ExpressionList COMMA Expression { $1.Add($3); $$ = $1; $$.Location = @$; }
     ;
 
 Expression
-    : Relation { $$ = new Expression($1, null, null); }
-    | Relation ExpressionOperator Relation { $$ = new Expression($1, $2, $3); }
+    : Relation { $$ = new Expression(@$, $1, null, null); }
+    | Relation ExpressionOperator Relation { $$ = new Expression(@$, $1, $2, $3); }
     ;
 
 ExpressionOperator
@@ -184,8 +184,8 @@ ExpressionOperator
     ;
 
 Relation
-    : Factor { $$ = new Relation($1, null, null); }
-    | Factor RelationOperator Factor { $$ = new Relation($1, $2, $3); }
+    : Factor { $$ = new Relation(@$, $1, null, null); }
+    | Factor RelationOperator Factor { $$ = new Relation(@$, $1, $2, $3); }
     ;
 
 RelationOperator
@@ -198,8 +198,8 @@ RelationOperator
     ;
 
 Factor
-    : Term { $$ = new Factor($1, null, null); }
-    | Term FactorOperator Term { $$ = new Factor($1, $2, $3); }
+    : Term { $$ = new Factor(@$, $1, null, null); }
+    | Term FactorOperator Term { $$ = new Factor(@$, $1, $2, $3); }
     ;
 
 FactorOperator
@@ -208,8 +208,8 @@ FactorOperator
     ;
 
 Term
-    : Unary { $$ = new Term($1, null, null); }
-    | Unary TermOperator Unary { $$ = new Term($1, $2, $3); }
+    : Unary { $$ = new Term(@$, $1, null, null); }
+    | Unary TermOperator Unary { $$ = new Term(@$, $1, $2, $3); }
     ;
 
 TermOperator
@@ -218,25 +218,25 @@ TermOperator
     ;
 
 Unary
-    : Reference { $$ = new Unary($1); }
-    | Reference IS TypeIndicator { $$ = new Unary($1, $3); }
-    | Primary  { $$ = new Unary($1); }
-    | PrimaryOperator Primary { $$ = new Unary($1, $2); }
+    : Reference { $$ = new Unary(@$, $1); }
+    | Reference IS TypeIndicator { $$ = new Unary(@$, $1, $3); }
+    | Primary  { $$ = new Unary(@$, $1); }
+    | PrimaryOperator Primary { $$ = new Unary(@$, $1, $2); }
     ;
 
 Reference
-    : IDENTIFIER { $$ = new Reference($1.Token.Value); }
-    | Reference LBRACKET Expression RBRACKET { $$ = new Reference($1, $3); }
-    | Reference LPAREN ExpressionList RPAREN { $$ = new Reference($1, $3); }
-    | Reference DOT IDENTIFIER { $$ = new Reference($1, $3.Token.Value); }
-    | Reference DOT INTEGER_LITERAL { $$ = new Reference($1, Int128.Parse($3.Token.Value)); }
+    : IDENTIFIER { $$ = new Reference(@$, $1.Token.Value); }
+    | Reference LBRACKET Expression RBRACKET { $$ = new Reference(@$, $1, $3); }
+    | Reference LPAREN ExpressionList RPAREN { $$ = new Reference(@$, $1, $3); }
+    | Reference DOT IDENTIFIER { $$ = new Reference(@$, $1, $3.Token.Value); }
+    | Reference DOT INTEGER_LITERAL { $$ = new Reference(@$, $1, Int128.Parse($3.Token.Value)); }
     ;
 
 Primary
-    : Literal { $$ = new Primary($1); }
-    | Read { $$ = new Primary($1); }
-    | FunctionLiteral { $$ = new Primary($1); }
-    | LPAREN Expression RPAREN { $$ = new Primary($2); }
+    : Literal { $$ = new Primary(@$, $1); }
+    | Read { $$ = new Primary(@$, $1); }
+    | FunctionLiteral { $$ = new Primary(@$, $1); }
+    | LPAREN Expression RPAREN { $$ = new Primary(@$, $2); }
     ;
 
 PrimaryOperator
@@ -263,53 +263,53 @@ TypeIndicator
     ;
 
 Literal
-    : INTEGER_LITERAL { $$ = new Literal(Int128.Parse($1.Token.Value)); }
-    | REAL_LITERAL { $$ = new Literal(double.Parse($1.Token.Value, System.Globalization.CultureInfo.InvariantCulture)); }
-    | BOOLEAN_LITERAL { $$ = new Literal(bool.Parse($1.Token.Value)); }
-    | STRING_LITERAL { $$ = new Literal($1.Token.Value); }
-    | Tuple { $$ = new Literal($1); }
-    | Array { $$ = new Literal($1); }
-    | EMPTY { $$ = new Literal(); }
+    : INTEGER_LITERAL { $$ = new Literal(@$, Int128.Parse($1.Token.Value)); }
+    | REAL_LITERAL { $$ = new Literal(@$, double.Parse($1.Token.Value, System.Globalization.CultureInfo.InvariantCulture)); }
+    | BOOLEAN_LITERAL { $$ = new Literal(@$, bool.Parse($1.Token.Value)); }
+    | STRING_LITERAL { $$ = new Literal(@$, $1.Token.Value); }
+    | Tuple { $$ = new Literal(@$, $1); }
+    | Array { $$ = new Literal(@$, $1); }
+    | EMPTY { $$ = new Literal(@$); }
     ;
 
 FunctionLiteral
-    : FUNC FunctionBody { $$ = new FunctionLiteral(null, $2); }
-    | FUNC LPAREN IdentifierList RPAREN FunctionBody { $$ = new FunctionLiteral($3, $5); }
+    : FUNC FunctionBody { $$ = new FunctionLiteral(@$, null, $2); }
+    | FUNC LPAREN IdentifierList RPAREN FunctionBody { $$ = new FunctionLiteral(@$, $3, $5); }
     ;
 
 IdentifierList
-    : IDENTIFIER { $$ = new IdentifierList($1.Token.Value); }
+    : IDENTIFIER { $$ = new IdentifierList(@$, $1.Token.Value); }
     | IdentifierList COMMA IDENTIFIER { $1.Add($3.Token.Value); $$ = $1; }
     ;
 
 FunctionBody
-    : IS StatementList END { $$ = new FunctionBody($2); }
-    | ARROW Expression { $$ = new FunctionBody($2); }
+    : IS StatementList END { $$ = new FunctionBody(@$, $2); }
+    | ARROW Expression { $$ = new FunctionBody(@$, $2); }
     ;
 
 Tuple
-    : LBRACE TupleElements RBRACE { $$ = new AST.Tuple($2); }
-    | LBRACE RBRACE { $$ = new AST.Tuple(new TupleElements()); }
+    : LBRACE TupleElements RBRACE { $$ = new AST.Tuple(@$, $2); }
+    | LBRACE RBRACE { $$ = new AST.Tuple(@$, new TupleElements(@$)); }
     ;
 
 TupleElements
-    : TupleElement { $$ = new TupleElements($1); }
-    | TupleElements COMMA TupleElement { $1.Add($3); $$ = $1; }
+    : TupleElement { $$ = new TupleElements(@$, $1); }
+    | TupleElements COMMA TupleElement { $1.Add($3); $$ = $1; $$.Location = @$; }
     ;
 
 TupleElement
-    : Expression { $$ = new TupleElement(null, $1); }
-    | IDENTIFIER ASSIGN Expression { $$ = new TupleElement($1.Token.Value, $3); }
+    : Expression { $$ = new TupleElement(@$, null, $1); }
+    | IDENTIFIER ASSIGN Expression { $$ = new TupleElement(@$, $1.Token.Value, $3); }
     ;
 
 Array
-    : LBRACKET ArrayElements RBRACKET { $$ = new AST.Array($2); }
-    | LBRACKET RBRACKET { $$ = new AST.Array(new ArrayElements()); }
+    : LBRACKET ArrayElements RBRACKET { $$ = new AST.Array(@$, $2); }
+    | LBRACKET RBRACKET { $$ = new AST.Array(@$, new ArrayElements(@$)); }
     ;
 
 ArrayElements
-    : Expression { $$ = new ArrayElements($1); }
-    | ArrayElements COMMA Expression { $1.Add($3); $$ = $1; }
+    : Expression { $$ = new ArrayElements(@$, $1); }
+    | ArrayElements COMMA Expression { $1.Add($3); $$ = $1; $$.Location = @$; }
     ;
 %%
 

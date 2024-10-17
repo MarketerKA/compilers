@@ -3,12 +3,18 @@ using DLang.Analysis;
 using DLang.Lexing;
 using DLang.Parsing;
 using DLang.Parsing.AST;
+using QUT.Gppg;
 
 namespace DLang
 {
 
     public class Program
     {
+        private static string ConstructErrorLocation(string filename, LexLocation location)
+        {
+            return $"{filename}:{location.StartLine}:{location.StartColumn}: error: ";
+        }
+
         public static void Main(string[] args)
         {
             Args arguments = new(args);
@@ -56,7 +62,7 @@ namespace DLang
             {
                 foreach (var error in e.Errors)
                 {
-                    Console.Error.WriteLine(error.Message);
+                    Console.Error.WriteLine(ConstructErrorLocation(filename, error.Location) + error.Message);
                 }
 
                 System.Environment.Exit(1);

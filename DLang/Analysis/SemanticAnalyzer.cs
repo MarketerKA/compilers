@@ -78,7 +78,7 @@ namespace DLang.Analysis
 
                 if (_namespaceStack.NameExistsInCurrentNamespace(name))
                 {
-                    _errors.Add(new SemanticError($"Redefinition of \"{name}\""));
+                    _errors.Add(new SemanticError(declaration.Location, $"redefinition of \"{name}\""));
                 }
 
                 _namespaceStack.Add(name);
@@ -135,7 +135,7 @@ namespace DLang.Analysis
         {
             if (!_namespaceStack.IsFunctionBody())
             {
-                _errors.Add(new SemanticError("\"return\" keyword used outside of function body"));
+                _errors.Add(new SemanticError(@return.Location, "\"return\" keyword used outside of function body"));
             }
 
             if (@return.Expression != null)
@@ -218,7 +218,7 @@ namespace DLang.Analysis
                 case ReferenceType.Identifier:
                     if (!_namespaceStack.NameExists(reference.Identifier!))
                     {
-                        _errors.Add(new SemanticError($"Reference to undeclared identifier \"{reference.Identifier}\""));
+                        _errors.Add(new SemanticError(reference.Location, $"reference to undeclared identifier \"{reference.Identifier}\""));
                     }
                     break;
                 case ReferenceType.ArrayIndex:

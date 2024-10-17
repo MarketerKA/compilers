@@ -1,4 +1,6 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
     internal enum StatementType
@@ -11,7 +13,7 @@
         Return
     }
 
-    internal class Statement
+    internal class Statement : Locationed
     {
         internal StatementType Type;
         public readonly Declaration? Declaration;
@@ -21,37 +23,37 @@
         public readonly Loop? Loop;
         public readonly Return? Return;
 
-        public Statement(Declaration declaration)
+        public Statement(LexLocation location, Declaration declaration) : base(location)
         {
             Declaration = declaration;
             Type = StatementType.Declaration;
         }
 
-        public Statement(Assignment assignment)
+        public Statement(LexLocation location, Assignment assignment) : base(location)
         {
             Assignment = assignment;
             Type = StatementType.Assignment;
         }
 
-        public Statement(Print print)
+        public Statement(LexLocation location, Print print) : base(location)
         {
             Print = print;
             Type = StatementType.Print;
         }
 
-        public Statement(If @if)
+        public Statement(LexLocation location, If @if) : base(location)
         {
             If = @if;
             Type = StatementType.If;
         }
 
-        public Statement(Loop? loop)
+        public Statement(LexLocation location, Loop? loop) : base(location)
         {
             Loop = loop;
             Type = StatementType.Loop;
         }
 
-        public Statement(Return @return)
+        public Statement(LexLocation location, Return @return) : base(location)
         {
             Return = @return;
             Type = StatementType.Return;

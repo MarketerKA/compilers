@@ -1,4 +1,6 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
     internal enum LiteralType
@@ -12,7 +14,7 @@
         Empty
     }
 
-    internal class Literal
+    internal class Literal : Locationed
     {
         public readonly LiteralType Type;
         public readonly Int128? IntValue;
@@ -22,37 +24,44 @@
         public readonly Tuple? TupleValue;
         public readonly Array? ArrayValue;
 
-        public Literal(Int128 value) { 
+        public Literal(LexLocation location, Int128 value) : base(location) 
+        { 
             IntValue = value; 
             Type = LiteralType.Int;
         }
 
-        public Literal(double value) { 
+        public Literal(LexLocation location, double value) : base(location)
+        { 
             DoubleValue = value;
             Type = LiteralType.Double;
         }
 
-        public Literal(bool value) { 
+        public Literal(LexLocation location, bool value) : base(location)
+        { 
             BoolValue = value; 
             Type = LiteralType.Bool;
         }
 
-        public Literal(string value) { 
+        public Literal(LexLocation location, string value) : base(location)
+        { 
             StringValue = value;
             Type = LiteralType.String;
         }
 
-        public Literal(Tuple value) { 
+        public Literal(LexLocation location, Tuple value) : base(location)
+        { 
             TupleValue = value; 
             Type = LiteralType.Tuple;
         }
 
-        public Literal(Array value) { 
+        public Literal(LexLocation location, Array value) : base(location)
+        { 
             ArrayValue = value; 
             Type = LiteralType.Array;
         }
 
-        public Literal() {
+        public Literal(LexLocation location) : base(location)
+        {
             Type = LiteralType.Empty;
         }
     }

@@ -1,12 +1,14 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Range
+    internal class Range : Locationed
     {
         public readonly Expression Left;
         public readonly Expression Right;
 
-        public Range(Expression left, Expression right)
+        public Range(LexLocation location, Expression left, Expression right) : base(location)
         {
             Left = left;
             Right = right;

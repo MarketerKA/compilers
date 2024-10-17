@@ -1,4 +1,6 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
     internal enum LoopType
@@ -7,7 +9,7 @@
         For
     }
 
-    internal class Loop
+    internal class Loop : Locationed
     {
         public readonly LoopType Type;
         public readonly Expression? Expression;
@@ -15,14 +17,14 @@
         public readonly string? Identifier;
         public readonly StatementList Statements;
 
-        public Loop(Expression expression, StatementList statements)
+        public Loop(LexLocation location, Expression expression, StatementList statements) : base(location)
         {
             Expression = expression;
             Statements = statements;
             Type = LoopType.While;
         }
 
-        public Loop(string? identifier, Range range, StatementList statements)
+        public Loop(LexLocation location, string? identifier, Range range, StatementList statements) : base(location)
         {
             Identifier = identifier;
             Range = range;

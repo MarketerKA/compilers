@@ -1,13 +1,15 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Expression
+    internal class Expression : Locationed
     {
         public readonly Relation Left;
         public readonly ExpressionOperator? Operator;
         public readonly Relation? Right;
 
-        public Expression(Relation left, ExpressionOperator? @operator, Relation? right)
+        public Expression(LexLocation location, Relation left, ExpressionOperator? @operator, Relation? right) : base(location)
         {
             Left = left;
             Operator = @operator;

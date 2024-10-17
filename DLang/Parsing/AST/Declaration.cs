@@ -1,11 +1,16 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Declaration
+    internal class Declaration : Locationed
     {
         public readonly DefinitionList Definitions;
 
-        public Declaration(DefinitionList definitionList) { Definitions = definitionList; }
+        public Declaration(LexLocation location, DefinitionList definitionList) : base(location) 
+        { 
+            Definitions = definitionList; 
+        }
     }
 
 }

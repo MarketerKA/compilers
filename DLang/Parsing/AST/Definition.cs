@@ -1,12 +1,14 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class Definition
+    internal class Definition : Locationed
     {
         public readonly string Identifier;
         public readonly Expression? Expression;
 
-        public Definition(string identifier, Expression? expression)
+        public Definition(LexLocation location, string identifier, Expression? expression) : base(location)
         {
             Identifier = identifier;
             Expression = expression;

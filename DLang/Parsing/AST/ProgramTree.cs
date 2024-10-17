@@ -1,11 +1,13 @@
-﻿namespace DLang.Parsing.AST
+﻿using QUT.Gppg;
+
+namespace DLang.Parsing.AST
 {
 
-    internal class ProgramTree
+    internal class ProgramTree : Locationed
     {
         public readonly StatementList Statements;
 
-        public ProgramTree(StatementList statements)
+        public ProgramTree(LexLocation location, StatementList statements) : base(location)
         {
             Statements = statements;
         }
