@@ -39,6 +39,7 @@
         {
             PrimaryOperator = primaryOperator;
             Primary = primary;
+            Type = UnaryType.Primary;
         }
     }
 
