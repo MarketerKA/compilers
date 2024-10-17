@@ -13,14 +13,12 @@ namespace DLang.Parsing
     {
         private Lexer _lexer;
         private bool _print;
-        private string _filename;
         public override LexLocation yylloc { get; set; }
 
-        public Scanner(Lexer lexer, string filename, bool print = false)
+        public Scanner(Lexer lexer, bool print = false)
         {
             _lexer = lexer;
             _print = print;
-            _filename = filename;
             yylloc = new LexLocation(1, 1, 1, 1);
         }
 
@@ -49,8 +47,7 @@ namespace DLang.Parsing
 
         public override void yyerror(string format, params object[] args)
         {
-            string position = $"{_filename}:{yylloc.EndLine}:{yylloc.EndColumn}: ";
-            throw new ParsingError(position + string.Format(format, args));
+            throw new ParsingError(string.Format(format, args));
         }
     }
 }

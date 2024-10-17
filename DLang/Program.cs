@@ -34,7 +34,7 @@ namespace DLang
             string filename = Path.GetFileName(arguments.InputFilePath);
 
             Lexer lexer = new(input);
-            Scanner scanner = new(lexer, filename, true);
+            Scanner scanner = new(lexer, false);
             Parser parser = new(scanner);
 
             try
@@ -42,7 +42,7 @@ namespace DLang
                 parser.Parse();
             }
             catch (ParsingError e) {
-                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(ConstructErrorLocation(filename, scanner.yylloc) + e.Message);
                 System.Environment.Exit(1);
             }
             catch (Exception e)
