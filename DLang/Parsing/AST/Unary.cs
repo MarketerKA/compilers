@@ -10,7 +10,7 @@
 
     internal class Unary
     {
-        public UnaryType Type;
+        public readonly UnaryType Type;
         public readonly Reference? Reference;
         public readonly TypeIndicator? TypeIndicator;
         public readonly Primary? Primary;
