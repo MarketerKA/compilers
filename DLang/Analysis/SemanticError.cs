@@ -1,15 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using QUT.Gppg;
 
 namespace DLang.Analysis
 {
+
     internal class SemanticError : Exception
     {
-        public SemanticError(string message) : base(message) { }
+        public readonly LexLocation Location;
 
-        public SemanticError(string message, Exception innerException) : base(message, innerException) { }
+        public SemanticError(LexLocation location, string message) : base(message) 
+        {
+            Location = location;
+        }
+
+        public SemanticError(LexLocation location, string message, Exception innerException) : base(message, innerException) 
+        {
+            Location = location;
+        }
     }
+
 }
