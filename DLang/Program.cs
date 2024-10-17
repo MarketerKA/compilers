@@ -4,7 +4,6 @@ using DLang.Lexing;
 using DLang.Parsing;
 using DLang.Parsing.AST;
 using QUT.Gppg;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DLang
 {
