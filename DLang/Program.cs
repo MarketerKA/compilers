@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using DLang.Analysis;
 using DLang.Lexing;
 using DLang.Parsing;
 using DLang.Parsing.AST;
@@ -45,6 +46,17 @@ namespace DLang
             }
 
             ProgramTree programTree = parser.GetProgramTree();
+
+            try
+            {
+                SemanticAnalyzer semanticAnalyzer = new(programTree);
+                semanticAnalyzer.Analyze();
+            }
+            catch (SemanticError e)
+            {
+                Console.Error.WriteLine(e.Message);
+                System.Environment.Exit(1);
+            }
 
             var options = new JsonSerializerOptions
             {
