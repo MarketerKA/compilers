@@ -7,16 +7,22 @@ namespace DLang.Analysis
     {
         private readonly ProgramTree _programTree;
         private readonly NamespaceStack _namespaceStack;
+        private readonly List<SemanticError> _errors;
 
         public SemanticAnalyzer(ProgramTree programTree)
         {
             _programTree = programTree;
             _namespaceStack = new();
+            _errors = [];
         }
 
         public void Analyze()
         {
             AnalyzeStatementList(_programTree.Statements);
+            if (_errors.Count > 0)
+            {
+                throw new SemanticErrors(_errors);
+            }
         }
 
         private void AnalyzeStatementList(StatementList statementList, IEnumerable<string>? addNames = null, bool isFunctionBody = false)
@@ -72,7 +78,7 @@ namespace DLang.Analysis
 
                 if (_namespaceStack.NameExistsInCurrentNamespace(name))
                 {
-                    throw new SemanticError($"Redefinition of \"{name}\"");
+                    _errors.Add(new SemanticError($"Redefinition of \"{name}\""));
                 }
 
                 _namespaceStack.Add(name);
@@ -129,7 +135,7 @@ namespace DLang.Analysis
         {
             if (!_namespaceStack.IsFunctionBody())
             {
-                throw new SemanticError("\"return\" keyword used outside of function body");
+                _errors.Add(new SemanticError("\"return\" keyword used outside of function body"));
             }
 
             if (@return.Expression != null)
@@ -212,7 +218,7 @@ namespace DLang.Analysis
                 case ReferenceType.Identifier:
                     if (!_namespaceStack.NameExists(reference.Identifier!))
                     {
-                        throw new SemanticError($"Reference to undeclared identifier \"{reference.Identifier}\"");
+                        _errors.Add(new SemanticError($"Reference to undeclared identifier \"{reference.Identifier}\""));
                     }
                     break;
                 case ReferenceType.ArrayIndex:
