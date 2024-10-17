@@ -52,9 +52,13 @@ namespace DLang
                 SemanticAnalyzer semanticAnalyzer = new(programTree);
                 semanticAnalyzer.Analyze();
             }
-            catch (SemanticError e)
+            catch (SemanticErrors e)
             {
-                Console.Error.WriteLine(e.Message);
+                foreach (var error in e.Errors)
+                {
+                    Console.Error.WriteLine(error.Message);
+                }
+
                 System.Environment.Exit(1);
             }
 
