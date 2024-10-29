@@ -77,6 +77,13 @@ namespace DLang
 
             string json = JsonSerializer.Serialize(programTree, options);
             Console.WriteLine(json);
+
+            Optimizer optimizer = new(programTree);
+            optimizer.Optimize();
+
+            json = JsonSerializer.Serialize(programTree, options);
+            Console.WriteLine("Optimized AST:");
+            Console.WriteLine(json);
         }
     }
 
