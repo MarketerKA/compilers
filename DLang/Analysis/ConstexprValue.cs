@@ -193,7 +193,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! +
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation +"),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -203,17 +203,17 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! +
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation +"),
                 },
-                ConstexprValueType.Bool => throw new ConstexprValueError("Invalid operation"),
+                ConstexprValueType.Bool => throw new ConstexprValueError("Invalid operation +"),
                 ConstexprValueType.String => right.Type switch
                 {
                     ConstexprValueType.String => new ConstexprValue(
                                                         left.StringValue! +
                                                         right.StringValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation +"),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation +"),
             };
         }
 
@@ -234,7 +234,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! -
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation -"),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -244,9 +244,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! -
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation -"),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation -"),
             };
         }
 
@@ -267,7 +267,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! *
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation *"),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -277,9 +277,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! *
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation *"),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation *"),
             };
         }
 
@@ -300,7 +300,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! /
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation /"),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -310,9 +310,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! /
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation /"),
                 },
-                _ => throw new ConstexprValueError("Invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation /"),
             };
         }
 
@@ -327,7 +327,7 @@ namespace DLang.Analysis
             {
                 ConstexprValueType.Int => new ConstexprValue((Int128)other.IntValue!),
                 ConstexprValueType.Real => new ConstexprValue((double)other.RealValue!),
-                _ => throw new ConstexprValueError("Invalid operation")
+                _ => throw new ConstexprValueError("Invalid operation unary +")
             };
         }
 
@@ -342,7 +342,7 @@ namespace DLang.Analysis
             {
                 ConstexprValueType.Int => new ConstexprValue(-(Int128)other.IntValue!),
                 ConstexprValueType.Real => new ConstexprValue(-(double)other.RealValue!),
-                _ => throw new ConstexprValueError("Invalid operation")
+                _ => throw new ConstexprValueError("Invalid operation unary -")
             };
         }
 
@@ -356,7 +356,7 @@ namespace DLang.Analysis
             return other.Type switch
             {
                 ConstexprValueType.Bool => new ConstexprValue(!(bool)other.BoolValue!),
-                _ => throw new ConstexprValueError("Invalid operation")
+                _ => throw new ConstexprValueError("Invalid operation not")
             };
         }
 
@@ -369,7 +369,7 @@ namespace DLang.Analysis
 
             if (left.Type != ConstexprValueType.Bool || right.Type != ConstexprValueType.Bool)
             {
-                throw new ConstexprValueError("Invalid operation");
+                throw new ConstexprValueError("Invalid operation and");
             }
 
             return new ConstexprValue((bool)left.BoolValue! && (bool)right.BoolValue!);
@@ -384,7 +384,7 @@ namespace DLang.Analysis
 
             if (left.Type != ConstexprValueType.Bool || right.Type != ConstexprValueType.Bool)
             {
-                throw new ConstexprValueError("Invalid operation");
+                throw new ConstexprValueError("Invalid operation or");
             }
 
             return new ConstexprValue((bool)left.BoolValue! || (bool)right.BoolValue!);
@@ -399,7 +399,7 @@ namespace DLang.Analysis
 
             if (left.Type != ConstexprValueType.Bool || right.Type != ConstexprValueType.Bool)
             {
-                throw new ConstexprValueError("Invalid operation");
+                throw new ConstexprValueError("Invalid operation xor");
             }
 
             return new ConstexprValue((bool)left.BoolValue! ^ (bool)right.BoolValue!);
@@ -422,7 +422,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! <
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation <"),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -432,9 +432,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! <
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation <"),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation <"),
             };
         }
 
@@ -455,7 +455,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! >
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation >"),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -465,9 +465,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! >
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation >"),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation >"),
             };
         }
 
@@ -488,7 +488,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! <=
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation <="),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -498,9 +498,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! <=
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation <="),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation <="),
             };
         }
 
@@ -521,7 +521,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! >=
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation >="),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -531,9 +531,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! >=
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation >="),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation >="),
             };
         }
 
@@ -554,7 +554,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! ==
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation ="),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -564,9 +564,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! ==
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation ="),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation ="),
             };
         }
 
@@ -587,7 +587,7 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.IntValue! !=
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation /="),
                 },
                 ConstexprValueType.Real => right.Type switch
                 {
@@ -597,9 +597,9 @@ namespace DLang.Analysis
                     ConstexprValueType.Real => new ConstexprValue(
                                                     (double)left.RealValue! !=
                                                     (double)right.RealValue!),
-                    _ => throw new ConstexprValueError("Invalid operation"),
+                    _ => throw new ConstexprValueError("Invalid operation /="),
                 },
-                _ => throw new ConstexprValueError("invalid operation"),
+                _ => throw new ConstexprValueError("Invalid operation /="),
             };
         }
     }

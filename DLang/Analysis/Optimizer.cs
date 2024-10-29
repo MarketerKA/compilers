@@ -115,7 +115,15 @@ namespace DLang.Analysis
 
         private static void OptimizeExpression(Expression expression)
         {
-            var val = ConstexprValue.EvalExpression(expression);
+            ConstexprValue val;
+            try
+            {
+                val = ConstexprValue.EvalExpression(expression);
+            }
+            catch (ConstexprValueError e)
+            {
+                throw new OptimizerError(expression.Location, e.Message);
+            }
 
             if (val.Type == ConstexprValueType.NonConstexpr)
             {

@@ -4,6 +4,7 @@ using DLang.Lexing;
 using DLang.Parsing;
 using DLang.Parsing.AST;
 using QUT.Gppg;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DLang
 {
@@ -78,8 +79,16 @@ namespace DLang
             string json = JsonSerializer.Serialize(programTree, options);
             Console.WriteLine(json);
 
-            Optimizer optimizer = new(programTree);
-            optimizer.Optimize();
+            try
+            {
+                Optimizer optimizer = new(programTree);
+                optimizer.Optimize();
+            }
+            catch (OptimizerError e)
+            {
+                Console.Error.WriteLine(ConstructErrorLocation(filename, e.Location) + e.Message);
+                System.Environment.Exit(1);
+            }
 
             json = JsonSerializer.Serialize(programTree, options);
             Console.WriteLine("Optimized AST:");
