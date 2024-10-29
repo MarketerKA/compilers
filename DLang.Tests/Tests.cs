@@ -1,42 +1,61 @@
+using System.IO;
+using NUnit.Framework;
 using DLang.Lexing;
-using DLang.Parsing; // Add if needed
+using DLang.Parsing;
 
-
-namespace DLang.Tests;
-public class Tests
+namespace DLang.Tests
 {
     public class ParserTests
     {
-        [Test]
-        public void Test_Parser_Success()
+        private string ReadFileContent(string filePath)
         {
-            // Simulate reading from a valid input file
-            string input = "var tup := {a := 1, b := 2};";
-
-            // Create the necessary components: Lexer, Scanner, Parser
-            Lexer lexer = new Lexer(input);
-            Scanner scanner = new Scanner(lexer, "file", true);
-            Parser parser = new Parser(scanner);
-
-            // Attempt to parse
-            bool result = parser.Parse();
-
-            // Check that parsing succeeds
-            Assert.IsTrue(result, "Parsing failure occurred when it should have succeeded.");
+            try
+            {
+                return File.ReadAllText(filePath);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail($"Failed to read file at {filePath}: {ex.Message}");
+                return string.Empty;
+            }
         }
 
         [Test]
-        public void Test_Parser_Failure()
-        {
-            string input = "var tup := {a := 1 b := 2};";
+        [TestCase("../../../Tests/var_decl_with_init.d", true)]
+        [TestCase("../../../Tests/dynamic_type_reassign.d", true)]
+        [TestCase("../../../Tests/arithmetic_operations.d", true)]
+        [TestCase("../../../Tests/implicit_type_conversion.d", true)]
+        [TestCase("../../../Tests/cond_stmt_without_else.d", true)]
+        [TestCase("../../../Tests/cond_stmt_with_else.d", true)]
+        [TestCase("../../../Tests/while_loop.d", true)]
+        [TestCase("../../../Tests/ranged_for_loop.d", true)]
+        [TestCase("../../../Tests/array_declaration_and_access.d", true)]
+        [TestCase("../../../Tests/tuple_decl_and_access.d", true)]
+        [TestCase("../../../Tests/scopes_and_shadowing.d", true)]
+        [TestCase("../../../Tests/is_operation.d", true)]
+        [TestCase("../../../Tests/func_as_first_class_citizen.d", true)]
+        [TestCase("../../../Tests/tuple_of_tuples.d", true)]
+        [TestCase("../../../Tests/func_with_tuple_arg.d", true)]
+        [TestCase("../../../Tests/func_returns_func.d", true)]
+        [TestCase("../../../Tests/func_as_argument.d", true)]
+        [TestCase("../../../Tests/tuple_including_func.d", true)]
 
+        public void Test_Parser(string filePath, bool shouldSucceed)
+        {
+            string input = ReadFileContent(filePath);
             Lexer lexer = new Lexer(input);
-            Scanner scanner = new Scanner(lexer, "file", true);
+            Scanner scanner = new Scanner(lexer, false);
             Parser parser = new Parser(scanner);
 
-            bool result = parser.Parse();
-
-            Assert.IsFalse(result, "Parsing succeeded when it should have failed.");
+            if (shouldSucceed)
+            {
+                bool result = parser.Parse();
+                Assert.IsTrue(result, $"Parsing failed for {filePath} when it should have succeeded.");
+            }
+            else
+            {
+                Assert.Throws<ParsingError>(() => parser.Parse(), $"Expected parsing to fail for {filePath}, but it succeeded.");
+            }
         }
     }
 }
