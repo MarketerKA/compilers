@@ -8,7 +8,7 @@ using QUT.Gppg;
 namespace DLang
 {
 
-    public class Program
+    public class DLang
     {
         private static string ConstructErrorLocation(string filename, LexLocation location)
         {
