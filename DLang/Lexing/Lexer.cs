@@ -101,12 +101,10 @@ namespace DLang.Lexing
                 Advance();
             }
 
-            // If we encounter a period, check the next character
             if (_currentChar == '.')
             {
                 Advance();
                 
-                // If the next character is a digit, treat it as a REAL_LITERAL
                 if (char.IsDigit(_currentChar))
                 {
                     while (_currentChar != '\0' && char.IsDigit(_currentChar))
@@ -119,13 +117,11 @@ namespace DLang.Lexing
                 }
                 else
                 {
-                    // Backtrack to allow DOT token to be processed separately
                     _position--;
                     _currentChar = '.';
                 }
             }
 
-            // If no further digits are found, treat it as an INTEGER_LITERAL
             string intValue = _input.Substring(start, _position - start);
             return new Token(Tokens.INTEGER_LITERAL, intValue);
         }
