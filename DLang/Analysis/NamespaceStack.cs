@@ -47,7 +47,15 @@
 
         public bool IsFunctionBody()
         {
-            return _functionStack[^1];
+            for (int i = _stack.Count - 1; i >= 0; i--)
+            {
+                if (_functionStack[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void Add(string name)
