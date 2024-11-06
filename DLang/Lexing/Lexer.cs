@@ -86,6 +86,7 @@ namespace DLang.Lexing
                 case "and": return Tokens.AND;
                 case "or": return Tokens.OR;
                 case "xor": return Tokens.XOR;
+                case "not": return Tokens.NOT;
                 case "true": return Tokens.BOOLEAN_LITERAL;
                 case "false": return Tokens.BOOLEAN_LITERAL;
                 default: return Tokens.IDENTIFIER;
