@@ -10,7 +10,8 @@ namespace DLang.Parsing.AST
         Print,
         If,
         Loop,
-        Return
+        Return,
+        Expression
     }
 
     internal class Statement : Locationed
@@ -22,6 +23,7 @@ namespace DLang.Parsing.AST
         public readonly If? If;
         public readonly Loop? Loop;
         public readonly Return? Return;
+        public readonly Expression? Expression;
 
         public Statement(LexLocation location, Declaration declaration) : base(location)
         {
@@ -57,6 +59,12 @@ namespace DLang.Parsing.AST
         {
             Return = @return;
             Type = StatementType.Return;
+        }
+
+        public Statement(LexLocation location, Expression expression) : base(location)
+        {
+            Expression = expression;
+            Type = StatementType.Expression;
         }
     }
 

@@ -49,6 +49,9 @@ namespace DLang.Analysis
                 case StatementType.Return:
                     OptimizeReturn(statement.Return!);
                     break;
+                case StatementType.Expression:
+                    OptimizeExpression(statement.Expression!);
+                    break;
             }
         }
 

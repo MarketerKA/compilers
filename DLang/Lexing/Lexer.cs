@@ -1,4 +1,6 @@
 using DLang.Parsing;
+using QUT.Gppg;
+using System.Text.RegularExpressions;
 
 namespace DLang.Lexing
 {
@@ -18,6 +20,11 @@ namespace DLang.Lexing
             _currentChar = _input.Length > 0 ? _input[0] : '\0';
             _line = 1;
             _col = 1;
+        }
+
+        private LexLocation GetLocation()
+        {
+            return new LexLocation(_line, _col, _line, _col);
         }
 
         private void Advance()
@@ -86,8 +93,12 @@ namespace DLang.Lexing
                 case "and": return Tokens.AND;
                 case "or": return Tokens.OR;
                 case "xor": return Tokens.XOR;
+                case "not": return Tokens.NOT;
                 case "true": return Tokens.BOOLEAN_LITERAL;
                 case "false": return Tokens.BOOLEAN_LITERAL;
+                case "readInt": return Tokens.READ_INT;
+                case "readReal": return Tokens.READ_REAL;
+                case "readString": return Tokens.READ_STRING;
                 default: return Tokens.IDENTIFIER;
             }
         }
@@ -131,12 +142,37 @@ namespace DLang.Lexing
         {
             Advance();
             int start = _position;
-            while (_currentChar != '\0' && _currentChar != '"')
+            bool escaped = false;
+            while (true)
             {
+                if (!escaped)
+                {
+                    escaped = _currentChar == '\\';
+                }
+                else
+                {
+                    escaped = false;
+                }
+
+                if (_currentChar == '\0' || (_currentChar == '"' && !escaped))
+                {
+                    break;
+                }
+
                 Advance();
             }
             string value = _input.Substring(start, _position - start);
             Advance();
+
+            try
+            {
+                value = Regex.Unescape(value);
+            }
+            catch (ArgumentException)
+            {
+                throw new LexerError(GetLocation(), $"string literal \"{value}\" contains invalid escape sequence(s)");
+            }
+
             return new Token(Tokens.STRING_LITERAL, value);
         }
 
@@ -189,7 +225,7 @@ namespace DLang.Lexing
                         Advance();
                         return new Token(Tokens.ASSIGN, ":=");
                     }
-                    throw new Exception($"Unexpected character: {_currentChar}");
+                    throw new LexerError(GetLocation(), $"unexpected character: {_currentChar}");
                 }
 
                 if (_currentChar == '=')
@@ -245,7 +281,7 @@ namespace DLang.Lexing
                     case '}': Advance(); return new Token(Tokens.RBRACE, "}");
                 }
 
-                throw new Exception($"Unexpected character: {_currentChar}");
+                throw new LexerError(GetLocation(), $"unexpected character: {_currentChar}");
             }
 
             return new Token(Tokens.EOF, string.Empty);

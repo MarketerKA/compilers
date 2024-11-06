@@ -66,6 +66,9 @@ namespace DLang.Analysis
                 case StatementType.Return:
                     AnalyzeReturn(statement.Return!);
                     break;
+                case StatementType.Expression:
+                    AnalyzeExpression(statement.Expression!);
+                    break;
             }
         }
 

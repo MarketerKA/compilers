@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Text;
 using DLang.Analysis;
+using DLang.Execution;
 using DLang.Lexing;
 using DLang.Parsing;
 using DLang.Parsing.AST;
@@ -8,11 +9,29 @@ using QUT.Gppg;
 namespace DLang
 {
 
-    public class Program
+    public class DLang
     {
         private static string ConstructErrorLocation(string filename, LexLocation location)
         {
             return $"{filename}:{location.StartLine}:{location.StartColumn}: error: ";
+        }
+
+        private static string ConstructExecutionError(string filename, ExecutionError e)
+        {
+            StringBuilder sb = new();
+            sb.Append($"{filename}:");
+            if (e.Location != null)
+            {
+                sb.Append($"{e.Location.StartLine}:{e.Location.StartColumn}:");
+            }
+            sb.Append($" runtime error: {e.Message}");
+
+            return sb.ToString();
+        }
+
+        private static string ConstructExecutionError(string filename, string text)
+        {
+            return $"{filename}: runtime error: {text}";
         }
 
         public static void Main(string[] args)
@@ -34,7 +53,7 @@ namespace DLang
             string filename = Path.GetFileName(arguments.InputFilePath);
 
             Lexer lexer = new(input);
-            Scanner scanner = new(lexer, false);
+            Scanner scanner = new(lexer);
             Parser parser = new(scanner);
 
             try
@@ -45,9 +64,9 @@ namespace DLang
                 Console.Error.WriteLine(ConstructErrorLocation(filename, scanner.yylloc) + e.Message);
                 System.Environment.Exit(1);
             }
-            catch (Exception e)
+            catch (LexerError e)
             {
-                Console.Error.WriteLine($"Unknown error: {e.Message}");
+                Console.Error.WriteLine(ConstructErrorLocation(filename, e.Location) + e.Message);
                 System.Environment.Exit(1);
             }
 
@@ -68,16 +87,6 @@ namespace DLang
                 System.Environment.Exit(1);
             }
 
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                IncludeFields = true,
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-            };
-
-            string json = JsonSerializer.Serialize(programTree, options);
-            Console.WriteLine(json);
-
             try
             {
                 Optimizer optimizer = new(programTree);
@@ -89,9 +98,22 @@ namespace DLang
                 System.Environment.Exit(1);
             }
 
-            json = JsonSerializer.Serialize(programTree, options);
-            Console.WriteLine("Optimized AST:");
-            Console.WriteLine(json);
+            try
+            {
+                Stack stack = new(256);
+                Program program = new(programTree, stack, new ConsoleInput(), new ConsoleOutput());
+                program.Run();
+            }
+            catch (ExecutionError e)
+            {
+                Console.Error.WriteLine(ConstructExecutionError(filename, e));
+                System.Environment.Exit(1);
+            }
+            catch (StackOverflowError e)
+            {
+                Console.Error.WriteLine(ConstructExecutionError(filename, e.Message));
+                System.Environment.Exit(1);
+            }
         }
     }
 
