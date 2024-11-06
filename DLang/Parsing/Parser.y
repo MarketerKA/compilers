@@ -115,6 +115,7 @@ Statement
     | If { $$ = new Statement(@$, $1); }
     | Loop { $$ = new Statement(@$, $1); }
     | Return { $$ = new Statement(@$, $1); }
+    | Expression SEMICOLON { $$ = new Statement(@$, $1); }
     ;
 
 Declaration
