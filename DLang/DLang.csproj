@@ -11,10 +11,6 @@
     <ProjectReference Include="..\GPPG\GPPG.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Execution\" />
-  </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="$(SolutionDir)GPPG\bin\$(Configuration)\net20\Gppg.exe $(SolutionDir)DLang\Parsing\Parser.y /out:$(SolutionDir)DLang\Parsing\Parser.cs" />
   </Target>
