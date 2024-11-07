@@ -238,7 +238,15 @@ namespace DLang.Execution
                         {
                             throw new ExecutionError(reference.Expression!.Location, "attempted to index an array with non-int value");
                         }
-                        return val.Array().Get(index.Int());
+
+                        try
+                        {
+                            return val.Array().Get(index.Int());
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+                            throw new ExecutionError(reference.Expression!.Location, e.Message);
+                        }
                     }
                 case ReferenceType.FunctionCall:
                     {
@@ -274,7 +282,7 @@ namespace DLang.Execution
                         {
                             return val.Tuple().Get((Int128)reference.TupleIndex!);
                         }
-                        catch (ArgumentOutOfRangeException e)
+                        catch (IndexOutOfRangeException e)
                         {
                             throw new ExecutionError(reference.Location, e.Message);
                         }
@@ -291,7 +299,7 @@ namespace DLang.Execution
                         {
                             return val.Tuple().Get(reference.Identifier!);
                         }
-                        catch (ArgumentOutOfRangeException e)
+                        catch (IndexOutOfRangeException e)
                         {
                             throw new ExecutionError(reference.Location, e.Message);
                         }
