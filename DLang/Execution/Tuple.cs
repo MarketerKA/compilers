@@ -42,7 +42,7 @@ namespace DLang.Execution
         {
             if (!NamedIndices.TryGetValue(name, out int value))
             {
-                throw new ArgumentOutOfRangeException($"key {name} does not exists in tuple");
+                throw new ArgumentOutOfRangeException($"key \"{name}\" does not exist in tuple");
             }
 
             return Values[value];
