@@ -52,6 +52,14 @@ namespace DLang.Execution
         {
             Tuple result = new();
 
+            foreach (var item in left.NamedIndices)
+            {
+                if (right.NamedIndices.ContainsKey(item.Key))
+                {
+                    throw new ValueError($"element name collision in tuple addition (\"{item.Key}\")");
+                }
+            }
+
             for (int i = 0; i < left.Values.Count; i++)
             {
                 Value val = new();
