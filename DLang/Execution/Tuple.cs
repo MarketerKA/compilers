@@ -50,7 +50,40 @@ namespace DLang.Execution
 
         public static Tuple operator+(Tuple left, Tuple right)
         {
-            throw new NotImplementedException();
+            Tuple result = new();
+
+            for (int i = 0; i < left.Values.Count; i++)
+            {
+                Value val = new();
+                result.Values.Add(val);
+                
+                if (left.IndicesNamed.TryGetValue(i, out string? value))
+                {
+                    result.IndicesNamed.Add(i, value);
+                    result.NamedIndices.Add(value, i);
+                }
+
+                val.Assign(left.Values[i]);
+            }
+
+            int end = result.Values.Count;
+
+            for (int i = 0; i < right.Values.Count; i++)
+            {
+                int index = i + end;
+                Value val = new();
+                result.Values.Add(val);
+
+                if (right.IndicesNamed.TryGetValue(i, out string? value))
+                {
+                    result.IndicesNamed.Add(index, value);
+                    result.NamedIndices.Add(value, index);
+                }
+
+                val.Assign(right.Values[i]);
+            }
+
+            return result;
         }
 
         public override string ToString()
