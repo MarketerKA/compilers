@@ -1,5 +1,5 @@
 using DLang.Parsing;
-
+using Tokens = DLang.Parsing.Tokens;
 namespace DLang.Lexing
 {
 
