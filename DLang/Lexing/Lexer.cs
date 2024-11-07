@@ -145,6 +145,11 @@ namespace DLang.Lexing
             bool escaped = false;
             while (true)
             {
+                if (_currentChar == '\0' || (_currentChar == '"' && !escaped))
+                {
+                    break;
+                }
+
                 if (!escaped)
                 {
                     escaped = _currentChar == '\\';
@@ -152,11 +157,6 @@ namespace DLang.Lexing
                 else
                 {
                     escaped = false;
-                }
-
-                if (_currentChar == '\0' || (_currentChar == '"' && !escaped))
-                {
-                    break;
                 }
 
                 Advance();
