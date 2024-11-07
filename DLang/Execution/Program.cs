@@ -282,7 +282,7 @@ namespace DLang.Execution
                         {
                             return val.Tuple().Get((Int128)reference.TupleIndex!);
                         }
-                        catch (ArgumentOutOfRangeException e)
+                        catch (IndexOutOfRangeException e)
                         {
                             throw new ExecutionError(reference.Location, e.Message);
                         }
@@ -299,7 +299,7 @@ namespace DLang.Execution
                         {
                             return val.Tuple().Get(reference.Identifier!);
                         }
-                        catch (ArgumentOutOfRangeException e)
+                        catch (IndexOutOfRangeException e)
                         {
                             throw new ExecutionError(reference.Location, e.Message);
                         }
