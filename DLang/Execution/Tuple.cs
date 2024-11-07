@@ -30,12 +30,12 @@ namespace DLang.Execution
 
         public Value Get(Int128 index)
         {
-            if (index < 0 || index >= Values.Count)
+            if (index < 1 || index > Values.Count)
             {
                 throw new IndexOutOfRangeException($"index {index} is out of tuple range");
             }
 
-            return Values[(int)index];
+            return Values[(int)index - 1];
         }
 
         public Value Get(string name)
