@@ -61,10 +61,7 @@ namespace DLang.Execution
             int i = 0;
             foreach (var pair in Values)
             {
-                if (!_contiguous)
-                    sb.Append($"{pair.Key}: {pair.Value}");
-                else
-                    sb.Append(pair.Value.ToString());
+                sb.Append($"[{pair.Key}] = {pair.Value}");
 
                 if (i < Values.Count - 1) sb.Append(", ");
                 i++;
