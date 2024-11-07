@@ -238,7 +238,15 @@ namespace DLang.Execution
                         {
                             throw new ExecutionError(reference.Expression!.Location, "attempted to index an array with non-int value");
                         }
-                        return val.Array().Get(index.Int());
+
+                        try
+                        {
+                            return val.Array().Get(index.Int());
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+                            throw new ExecutionError(reference.Expression!.Location, e.Message);
+                        }
                     }
                 case ReferenceType.FunctionCall:
                     {
