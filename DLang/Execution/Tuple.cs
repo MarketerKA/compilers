@@ -32,7 +32,7 @@ namespace DLang.Execution
         {
             if (index < 0 || index >= Values.Count)
             {
-                throw new ArgumentOutOfRangeException($"index {index} is out of tuple range");
+                throw new IndexOutOfRangeException($"index {index} is out of tuple range");
             }
 
             return Values[(int)index];
@@ -42,7 +42,7 @@ namespace DLang.Execution
         {
             if (!NamedIndices.TryGetValue(name, out int value))
             {
-                throw new ArgumentOutOfRangeException($"key \"{name}\" does not exist in tuple");
+                throw new IndexOutOfRangeException($"key \"{name}\" does not exist in tuple");
             }
 
             return Values[value];
