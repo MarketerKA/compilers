@@ -1,4 +1,5 @@
 ﻿using DLang.Parsing.AST;
+using QUT.Gppg;
 
 namespace DLang.Execution
 {
@@ -545,7 +546,7 @@ namespace DLang.Execution
             return primary.Type switch
             {
                 PrimaryType.Literal => EvalLiteral(primary.Literal!),
-                PrimaryType.Read => EvalRead((ReadType)primary.Read!),
+                PrimaryType.Read => EvalRead((ReadType)primary.Read!, primary.Location),
                 PrimaryType.FunctionLiteral => EvalFunctionLiteral(primary.FunctionLiteral!),
                 PrimaryType.Expression => EvalExpression(primary.Expression!),
                 _ => throw new InvalidOperationException()
@@ -597,7 +598,7 @@ namespace DLang.Execution
             return result;
         }
 
-        private Value EvalRead(ReadType type)
+        private Value EvalRead(ReadType type, LexLocation location)
         {
             string? value = _input.Next();
             if (value == null)
@@ -605,13 +606,35 @@ namespace DLang.Execution
                 return new Value();
             }
 
-            return type switch
+            string expectedType = "";
+            string statementName = "";
+
+            try
             {
-                ReadType.INT => new Value(Int128.Parse(value)),
-                ReadType.REAL => new Value(double.Parse(value)),
-                ReadType.STRING => new Value(value),
-                _ => throw new InvalidOperationException(),
-            };
+                switch (type)
+                {
+                    case ReadType.INT:
+                        expectedType = "int";
+                        statementName = "readInt";
+                        return new Value(Int128.Parse(value));
+                    case ReadType.REAL:
+                        expectedType = "real";
+                        statementName = "readReal";
+                        return new Value(double.Parse(value));
+                    case ReadType.STRING:
+                        return new Value(value);
+                }
+            }
+            catch (FormatException)
+            {
+                throw new ExecutionError(location, $"{statementName} expected {expectedType}, got \"{value}\"");
+            }
+            catch (OverflowException)
+            {
+                throw new ExecutionError(location, $"overflow on {statementName} ({value})");
+            }
+
+            throw new InvalidOperationException();
         }
 
         private Value EvalFunctionLiteral(FunctionLiteral literal)
