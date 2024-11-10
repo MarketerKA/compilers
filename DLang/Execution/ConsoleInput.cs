@@ -14,7 +14,8 @@
         {
             if (_tokens.Count == 0)
             {
-                while (true)
+                bool empty = true;
+                while (empty)
                 {
                     string? line = Console.ReadLine();
                     if (line == null)
@@ -22,18 +23,16 @@
                         return null;
                     }
 
-                    var tokens = line.Split();
-                    if (tokens.Length == 0)
-                    {
-                        continue;
-                    }
-
                     foreach (var token in line.Split())
                     {
+                        if (token == "")
+                        {
+                            continue;
+                        }
+
+                        empty = false;
                         _tokens.Enqueue(token);
                     }
-
-                    break;
                 }
             }
 
