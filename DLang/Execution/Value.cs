@@ -341,6 +341,8 @@ namespace DLang.Execution
 
         public Value Multiply(Value value)
         {
+            _currOp = "*";
+
             switch (Type)
             {
                 case ValueType.Int:
