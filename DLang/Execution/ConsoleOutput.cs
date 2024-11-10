@@ -7,7 +7,7 @@
 
         public void Write(string value)
         {
-            Console.WriteLine(value);
+            Console.Write(value);
         }
     }
 
