@@ -5,6 +5,8 @@ using DLang.Lexing;
 using DLang.Parsing;
 using DLang.Parsing.AST;
 using QUT.Gppg;
+using CommandLine;
+using System.Text.Json;
 
 namespace DLang
 {
@@ -36,31 +38,43 @@ namespace DLang
 
         public static void Main(string[] args)
         {
-            Args arguments = new(args);
+            CommandLine.Parser.Default.ParseArguments<Args>(args)
+                .WithParsed(Run)
+                .WithNotParsed(HandleParseError);
+        }
+
+        static void Run(Args args)
+        {
+            if (args.StackSize < 64 || args.StackSize > 512)
+            {
+                Console.Error.WriteLine($"error: stack size out of bounds [64; 512] ({args.StackSize})");
+                System.Environment.Exit(1);
+            }
 
             string input = "";
 
             try
-            { 
-                input = File.ReadAllText(arguments.InputFilePath); 
+            {
+                input = File.ReadAllText(args.File);
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Failed to read file ${arguments.InputFilePath}: {e.Message}");
+                Console.Error.WriteLine($"error: failed to read file: {e.Message}");
                 System.Environment.Exit(1);
             }
 
-            string filename = Path.GetFileName(arguments.InputFilePath);
+            string filename = Path.GetFileName(args.File);
 
             Lexer lexer = new(input);
-            Scanner scanner = new(lexer);
-            Parser parser = new(scanner);
+            Scanner scanner = new(lexer, args.DisplayLexerOutput);
+            Parsing.Parser parser = new(scanner);
 
             try
             {
                 parser.Parse();
             }
-            catch (ParsingError e) {
+            catch (ParsingError e)
+            {
                 Console.Error.WriteLine(ConstructErrorLocation(filename, scanner.yylloc) + e.Message);
                 System.Environment.Exit(1);
             }
@@ -87,20 +101,42 @@ namespace DLang
                 System.Environment.Exit(1);
             }
 
-            try
+            var jsonOptions = new JsonSerializerOptions
             {
-                Optimizer optimizer = new(programTree);
-                optimizer.Optimize();
+                WriteIndented = true,
+                IncludeFields = true,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
+
+            if (args.DisplayAST)
+            {
+                string astJson = JsonSerializer.Serialize(programTree, jsonOptions);
+                Console.WriteLine(astJson);
             }
-            catch (OptimizerError e)
+
+            if (!args.DisableOptimizations)
             {
-                Console.Error.WriteLine(ConstructErrorLocation(filename, e.Location) + e.Message);
-                System.Environment.Exit(1);
+                try
+                {
+                    Optimizer optimizer = new(programTree);
+                    optimizer.Optimize();
+                }
+                catch (OptimizerError e)
+                {
+                    Console.Error.WriteLine(ConstructErrorLocation(filename, e.Location) + e.Message);
+                    System.Environment.Exit(1);
+                }
+
+                if (args.DisplayOptimizedAST)
+                {
+                    string optimizedAstJson = JsonSerializer.Serialize(programTree, jsonOptions);
+                    Console.WriteLine(optimizedAstJson);
+                }
             }
 
             try
             {
-                Stack stack = new(256);
+                Stack stack = new(args.StackSize);
                 Program program = new(programTree, stack, new ConsoleInput(), new ConsoleOutput());
                 program.Run();
             }
@@ -114,6 +150,11 @@ namespace DLang
                 Console.Error.WriteLine(ConstructExecutionError(filename, e.Message));
                 System.Environment.Exit(1);
             }
+        }
+
+        static void HandleParseError(IEnumerable<Error> errs)
+        {
+            System.Environment.Exit(1);
         }
     }
 

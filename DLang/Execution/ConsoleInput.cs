@@ -14,15 +14,25 @@
         {
             if (_tokens.Count == 0)
             {
-                string? line = Console.ReadLine();
-                if (line == null)
+                bool empty = true;
+                while (empty)
                 {
-                    return null;
-                }
+                    string? line = Console.ReadLine();
+                    if (line == null)
+                    {
+                        return null;
+                    }
 
-                foreach (var token in line.Split())
-                {
-                    _tokens.Enqueue(token);
+                    foreach (var token in line.Split())
+                    {
+                        if (token == "")
+                        {
+                            continue;
+                        }
+
+                        empty = false;
+                        _tokens.Enqueue(token);
+                    }
                 }
             }
 
