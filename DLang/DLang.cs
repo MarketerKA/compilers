@@ -7,6 +7,7 @@ using DLang.Parsing.AST;
 using QUT.Gppg;
 using CommandLine;
 using System.Text.Json;
+using System.Globalization;
 
 namespace DLang
 {
@@ -38,6 +39,8 @@ namespace DLang
 
         public static void Main(string[] args)
         {
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
             CommandLine.Parser.Default.ParseArguments<Args>(args)
                 .WithParsed(Run)
                 .WithNotParsed(HandleParseError);

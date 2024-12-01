@@ -1,8 +1,8 @@
 ﻿using DLang.Analysis;
+using System.Globalization;
 
 namespace DLang.Execution
 {
-
     internal class Value
     {
         public ValueType Type { get; private set; }
@@ -145,55 +145,65 @@ namespace DLang.Execution
 
         private void ThrowError(Value value)
         {
-            throw new ValueError("unsupported operation " +
-                $"{Type.ToString().ToLower()} {_currOp!} {value.Type.ToString().ToLower()}");
+            throw new ValueError(
+                "unsupported operation "
+                    + $"{Type.ToString().ToLower()} {_currOp!} {value.Type.ToString().ToLower()}"
+            );
         }
 
         private void ThrowError()
         {
-            throw new ValueError("unsupported operation " +
-                $"{_currOp!} {Type.ToString().ToLower()}");
+            throw new ValueError(
+                "unsupported operation " + $"{_currOp!} {Type.ToString().ToLower()}"
+            );
         }
 
         public Int128 Int()
         {
-            if (Type != ValueType.Int) throw new InvalidOperationException();
+            if (Type != ValueType.Int)
+                throw new InvalidOperationException();
             return (Int128)_intValue!;
         }
 
         public double Real()
         {
-            if (Type != ValueType.Real) throw new InvalidOperationException();
+            if (Type != ValueType.Real)
+                throw new InvalidOperationException();
             return (double)_realValue!;
         }
 
         public bool Bool()
         {
-            if (Type != ValueType.Bool) throw new InvalidOperationException();
+            if (Type != ValueType.Bool)
+                throw new InvalidOperationException();
             return (bool)_boolValue!;
         }
 
         public string String()
         {
-            if (Type != ValueType.String) throw new InvalidOperationException();
+            if (Type != ValueType.String)
+                throw new InvalidOperationException();
             return _stringValue!;
         }
 
         public Array Array()
         {
-            if (Type != ValueType.Array) throw new InvalidOperationException();
+            if (Type != ValueType.Array)
+                throw new InvalidOperationException();
             return _arrayValue!;
         }
 
         public Tuple Tuple()
         {
-            if (Type != ValueType.Tuple) throw new InvalidOperationException();
+            if (Type != ValueType.Tuple)
+                throw new InvalidOperationException();
             return _tupleValue!;
         }
 
         public Function Function()
         {
-            if (Type != ValueType.Func) throw new InvalidOperationException();
+            if (Type != ValueType.Func)
+                throw new InvalidOperationException();
             return _functionValue!;
         }
 
@@ -375,7 +385,6 @@ namespace DLang.Execution
             }
 
             throw new InvalidOperationException();
-
         }
 
         public Value Divide(Value value)
@@ -744,9 +753,9 @@ namespace DLang.Execution
             switch (Type)
             {
                 case ValueType.Int:
-                    return Int().ToString();
+                    return Int().ToString(CultureInfo.InvariantCulture);
                 case ValueType.Real:
-                    return Real().ToString();
+                    return Real().ToString(CultureInfo.InvariantCulture);
                 case ValueType.Bool:
                     return Bool() == true ? "true" : "false";
                 case ValueType.String:
@@ -764,5 +773,4 @@ namespace DLang.Execution
             throw new InvalidOperationException();
         }
     }
-
 }

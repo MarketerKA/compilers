@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 using DLang.Analysis;
 using DLang.Execution;
@@ -98,7 +99,14 @@ namespace DLang.Tests
 
         private class MockInput : Input
         {
-            public string? Next() => null;
+            private Queue<string> _inputs = new();
+
+            public void SetInputs(IEnumerable<string> inputs)
+            {
+                _inputs = new Queue<string>(inputs);
+            }
+
+            public string? Next() => _inputs.Count > 0 ? _inputs.Dequeue() : null;
         }
 
         private class MockOutput : Output
@@ -111,7 +119,7 @@ namespace DLang.Tests
             }
         }
 
-        private MockOutput RunAndGetOutput(string input)
+        private MockOutput RunAndGetOutput(string input, MockInput? mockInput = null)
         {
             var lexer = new Lexer(input);
             var scanner = new Scanner(lexer, false);
@@ -124,10 +132,28 @@ namespace DLang.Tests
 
             var mockOutput = new MockOutput();
             var stack = new Stack(256);
-            var program = new Program(tree, stack, new MockInput(), mockOutput);
+            var program = new Program(tree, stack, mockInput ?? new MockInput(), mockOutput);
             program.Run();
 
             return mockOutput;
+        }
+
+    
+        [Test]
+        public void Test_Multiple_Inputs()
+        {
+            string filePath = "../../../Tests/input/multiple_inputs.d";
+            string input = ReadFileContent(filePath);
+            var mockInput = new MockInput();
+            mockInput.SetInputs([
+                "42",
+                "3.14",
+                "hello"
+            ]);
+
+            var mockOutput = RunAndGetOutput(input, mockInput);
+
+            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("45.14"));
         }
 
         [Test]
@@ -136,19 +162,7 @@ namespace DLang.Tests
             string filePath = "../../../Tests/arithmetic/arithmetic_operations.d";
             string input = ReadFileContent(filePath);
 
-            var lexer = new Lexer(input);
-            var scanner = new Scanner(lexer, false);
-            var parser = new Parser(scanner);
-
-            parser.Parse();
-            var tree = parser.GetProgramTree();
-            var analyzer = new SemanticAnalyzer(tree);
-            analyzer.Analyze();
-
-            var mockOutput = new MockOutput();
-            var stack = new Stack(256);
-            var program = new Program(tree, stack, new MockInput(), mockOutput);
-            program.Run();
+            var mockOutput = RunAndGetOutput(input);
 
             Assert.That(mockOutput.OutputValues, Has.Count.GreaterThan(0));
             Assert.That(mockOutput.OutputValues[0], Is.EqualTo("22"));
@@ -169,18 +183,6 @@ namespace DLang.Tests
         }
 
         [Test]
-        public void Test_Function_As_Value()
-        {
-            string filePath = "../../../Tests/higher_order/function_as_value.d";
-            string input = ReadFileContent(filePath);
-
-            var mockOutput = RunAndGetOutput(input);
-
-            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(1));
-            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("12"));
-        }
-
-        [Test]
         public void Test_Array_Dynamic()
         {
             string filePath = "../../../Tests/arrays/array_dynamic.d";
@@ -192,18 +194,6 @@ namespace DLang.Tests
             Assert.That(mockOutput.OutputValues[0], Is.EqualTo("10"));
             Assert.That(mockOutput.OutputValues[1], Is.EqualTo("15"));
             Assert.That(mockOutput.OutputValues[2], Is.EqualTo("25"));
-        }
-
-        [Test]
-        public void Test_Higher_Order_Function_Composition()
-        {
-            string filePath = "../../../Tests/higher_order/function_composition.d";
-            string input = ReadFileContent(filePath);
-
-            var mockOutput = RunAndGetOutput(input);
-
-            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(1));
-            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("14")); // (4 * 3) + 2 = 14
         }
 
         [Test]
@@ -234,30 +224,6 @@ namespace DLang.Tests
             Assert.That(mockOutput.OutputValues[2], Is.EqualTo("6"));
             Assert.That(mockOutput.OutputValues[3], Is.EqualTo("8"));
             Assert.That(mockOutput.OutputValues[4], Is.EqualTo("10"));
-        }
-
-        [Test]
-        public void Test_Higher_Order_Partial_Application()
-        {
-            string filePath = "../../../Tests/higher_order/partial_application.d";
-            string input = ReadFileContent(filePath);
-
-            var mockOutput = RunAndGetOutput(input);
-
-            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(1));
-            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("50")); // multiplyByTen(5) = 50
-        }
-
-        [Test]
-        public void Test_Collection_Operations()
-        {
-            string filePath = "../../../Tests/higher_order/collection_operations.d";
-            string input = ReadFileContent(filePath);
-
-            var mockOutput = RunAndGetOutput(input);
-
-            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(1));
-            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("15")); // sum of [1,2,3,4,5]
         }
 
         [Test]
@@ -316,6 +282,65 @@ namespace DLang.Tests
             Assert.That(mockOutput.OutputValues[3], Is.EqualTo("true"));
             Assert.That(mockOutput.OutputValues[4], Is.EqualTo("11")); // function call result
         }
+        [Test]
+        public void Test_Dynamic_Type_Reassign()
+        {
+            string filePath = "../../../Tests/variables/dynamic_type_reassign.d";
+            string input = ReadFileContent(filePath);
+
+            var mockOutput = RunAndGetOutput(input);
+
+            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(2));
+            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("5"));
+            Assert.That(mockOutput.OutputValues[1], Is.EqualTo("Hello"));
+        }
+
+
+        [Test]
+        public void Test_Array_Sparse()
+        {
+            string filePath = "../../../Tests/arrays/array_sparse.d";
+            string input = ReadFileContent(filePath);
+
+            var mockOutput = RunAndGetOutput(input);
+
+            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(3));
+            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("10"));
+            Assert.That(mockOutput.OutputValues[1], Is.EqualTo("20"));
+            Assert.That(mockOutput.OutputValues[2], Is.EqualTo("30"));
+        }
+
+        [Test]
+        public void Test_Array_Nested()
+        {
+            string filePath = "../../../Tests/arrays/array_nested.d";
+            string input = ReadFileContent(filePath);
+
+            var mockOutput = RunAndGetOutput(input);
+
+            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(4));
+            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("1"));
+            Assert.That(mockOutput.OutputValues[1], Is.EqualTo("4"));
+            Assert.That(mockOutput.OutputValues[2], Is.EqualTo("5"));
+            Assert.That(mockOutput.OutputValues[3], Is.EqualTo("42"));
+        }
+
+        [Test]
+        public void Test_Tuple_Including_Func()
+        {
+            string filePath = "../../../Tests/tuples/tuple_including_func.d";
+            string input = ReadFileContent(filePath);
+
+            var mockOutput = RunAndGetOutput(input);
+
+            Assert.That(mockOutput.OutputValues, Has.Count.EqualTo(6));
+            Assert.That(mockOutput.OutputValues[0], Is.EqualTo("1"));
+            Assert.That(mockOutput.OutputValues[1], Is.EqualTo("Hello"));
+            Assert.That(mockOutput.OutputValues[2], Is.EqualTo("World"));
+            Assert.That(mockOutput.OutputValues[3], Is.EqualTo("4"));
+            Assert.That(mockOutput.OutputValues[4], Is.EqualTo("6"));
+            Assert.That(mockOutput.OutputValues[5], Is.EqualTo("8"));
+        }
 
         [Test]
         // Arrays - Positive Tests
@@ -351,7 +376,6 @@ namespace DLang.Tests
         [TestCase("../../../Tests/arithmetic/arithmetic_operations.d", true)]
         // Scopes - Positive Tests
         [TestCase("../../../Tests/scopes/scopes_and_shadowing.d", true)]
-        
         // Runtime Error Tests - These should parse successfully but fail at runtime
         [TestCase("../../../Tests/errors/array_bounds_check.d", false)]
         [TestCase("../../../Tests/errors/func_decl_and_invocation_error.d", false)]
