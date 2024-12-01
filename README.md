@@ -1,5 +1,5 @@
 # DLang
-The purpose of this project is to implement an intepretator for D language.
+The purpose of this project is to implement an intepreter for D language.
 
 Team: **#FREEDUROV**
 - **Daniil Tiuftin** (d.tiuftin@innopolis.university)
@@ -45,7 +45,7 @@ redefinition while allowing variable shadowing.
 and evaluates it if so. Reports errors on unsupported operations.
 - Strips unreachable code (in ex. statements after `return` statement).
 
-### Interpretator
+### Interpreter
 - Recursively traverses the AST.
 - Executes each statement one by one.
 - Maintains a stack with namespaces (set of variables in the current scope).
