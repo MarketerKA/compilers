@@ -1,0 +1,1 @@
+var division := 10 / 0;
