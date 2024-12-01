@@ -1,5 +1,6 @@
 ﻿using DLang.Parsing.AST;
 using QUT.Gppg;
+using System.Globalization;
 
 namespace DLang.Execution
 {
@@ -17,6 +18,8 @@ namespace DLang.Execution
             _stack = stack;
             _input = input;
             _output = output;
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
         }
 
         public void Run()
@@ -620,7 +623,7 @@ namespace DLang.Execution
                     case ReadType.REAL:
                         expectedType = "real";
                         statementName = "readReal";
-                        return new Value(double.Parse(value));
+                        return new Value(double.Parse(value, CultureInfo.InvariantCulture));
                     case ReadType.STRING:
                         return new Value(value);
                 }
